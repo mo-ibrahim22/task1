@@ -1,0 +1,74 @@
+<div class="relative">
+    <!-- Cart Button -->
+    <button (click)="toggleDropdown()"
+        class="p-2 bg-primary rounded-full hover:bg-primary-100 transition-colors relative">
+        <img src="assets/icons/cart.svg" alt="Cart" class="w-5 h-5" />
+        <ng-container *ngIf="cartService.cartCount$ | async as count">
+            <span *ngIf="count > 0"
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
+                {{ count }}
+            </span>
+        </ng-container>
+    </button>
+
+    <!-- Dropdown -->
+    <div *ngIf="isOpen"
+        class="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-primary-200 z-50"
+        appClickOutside (clickOutside)="closeDropdown()">
+
+        <div class="p-4">
+            <h3 class="text-lg font-semibold text-primary-900 mb-4">Shopping Cart</h3>
+
+            <ng-container *ngIf="cartService.cartItems$ | async as items">
+                <div *ngIf="items.length === 0" class="text-center py-8 text-primary-600">
+                    Your cart is empty
+                </div>
+
+                <div *ngIf="items.length > 0" class="space-y-4">
+                    <!-- Cart Items -->
+                    <div *ngFor="let item of items" class="flex items-center gap-3 p-3 bg-primary-50 rounded-lg">
+                        <img [src]="item.image" [alt]="item.title" class="w-12 h-12 object-cover rounded">
+
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-medium text-sm text-primary-900 truncate">{{ item.title }}</h4>
+                            <p class="text-primary-600 text-sm">${{ item.price }}</p>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button (click)="updateQuantity(item.id, item.quantity - 1)"
+                                class="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm">
+                                -
+                            </button>
+                            <span class="text-sm font-medium w-8 text-center">{{ item.quantity }}</span>
+                            <button (click)="updateQuantity(item.id, item.quantity + 1)"
+                                class="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm">
+                                +
+                            </button>
+                            <button (click)="removeFromCart(item.id)" class="ml-2 text-red-500 hover:text-red-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="border-t border-primary-200 pt-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-semibold text-primary-900">Total:</span>
+                            <span class="font-bold text-lg text-primary-900">${{ getTotalPrice(items).toFixed(2)
+                                }}</span>
+                        </div>
+
+                        <button
+                            class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                            Checkout
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

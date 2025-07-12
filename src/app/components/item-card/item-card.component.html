@@ -1,4 +1,6 @@
-<div class="relative bg-primary-50 card-width rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group">
+<div
+  class="relative bg-primary-50 card-width rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group cursor-pointer"
+  (click)="openModal()">
 
   @if (first) {
   <span class="absolute top-2 right-2 bg-tertiary-500 text-tertiary-100 text-xs px-2 py-1 rounded z-10">First</span>
@@ -27,5 +29,10 @@
     <p class="text-lg font-bold" [ngClass]="product.price > 100 ? 'text-tertiary-400' : 'text-primary-600'">
       ${{ product.price }}
     </p>
+
+    <div class="mt-3" (click)="$event.stopPropagation()">
+      <app-cart-button [product]="product" size="sm" variant="secondary" class="w-full">
+      </app-cart-button>
+    </div>
   </div>
 </div>

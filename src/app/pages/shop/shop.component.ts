@@ -1,50 +1,33 @@
 // features/shop/shop.component.ts
 
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemCardComponent } from '../../components/item-card/item-card.component';
-import { MemberCardComponent } from '../../components/member-card/member-card.component';
 import { Product } from '../../common/models/product.model';
-import { Member } from '../../common/models/member.model';
-import { MEMBERS } from '../../common/data/members.data';
 import { ProductsService } from '../../common/services/products.service';
+import { FilterService } from '../../common/services/filter.service';
+import { ProductModalComponent } from '../../components/product-modal/product-modal.component';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [CommonModule, ItemCardComponent, MemberCardComponent],
+  imports: [CommonModule, ItemCardComponent, ProductModalComponent],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.css',
 })
 export class ShopComponent implements OnInit {
   private productsService = inject(ProductsService);
+  private filterService = inject(FilterService);
 
   isloading = false;
   products: Product[] = [];
   allProducts: Product[] = [];
 
-  allMembers: Member[] = MEMBERS;
-  filteredMembers: Member[] = MEMBERS;
-
   ngOnInit(): void {
     this.getProducts();
-  }
-
-  @Input() set searchTerm(term: string) {
-    this.filterMembers(term);
-    this.filterProducts(term);
-  }
-
-  private filterMembers(term: string) {
-    if (!term) {
-      this.filteredMembers = [...this.allMembers];
-      return;
-    }
-
-    const lowerTerm = term.toLowerCase();
-    this.filteredMembers = this.allMembers.filter((member) =>
-      member.name.toLowerCase().includes(lowerTerm)
-    );
+    this.filterService.searchTerm$.subscribe((term) => {
+      this.filterProducts(term);
+    });
   }
 
   private filterProducts(term: string) {

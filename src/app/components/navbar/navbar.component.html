@@ -1,50 +1,70 @@
-<nav
-  class="fixed top-0 left-8 md:left-64 right-0 bg-primary-50 border-b border-primary-500 z-20 transition-all duration-300">
-  <div class="flex items-center justify-between px-4 md:px-6 py-4">
-    <!-- Left section -->
-    <div class="flex items-center space-x-4">
-      <div class="flex items-center space-x-2">
-        <button class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors">
-          <img src="assets/icons/logo.svg" alt="Fashion Hub" class="w-5 h-5" />
-        </button>
-        <span class="text-lg font-bold text-primary-900 hidden md:inline">Fashion Hub</span>
-      </div>
+<nav class="fixed top-0 left-0 right-0 bg-primary-50 border-b border-primary-500 z-20 transition-all duration-300"
+  [class.md:left-64]="(sidebarOpen$ | async) || !(isMobile$ | async)"
+  [class.left-0]="!(sidebarOpen$ | async) && (isMobile$ | async)">
+  <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
+    <!-- Mobile Menu Button (Left) -->
+    <div class="flex items-center md:hidden">
+      <button (click)="toggleMenu()" class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors">
+        <img [src]="(sidebarOpen$ | async) ? 'assets/icons/close.svg' : 'assets/icons/menu.svg'" alt="Menu"
+          class="w-5 h-5" />
+      </button>
     </div>
 
-    <!-- Right section -->
-    <div class="flex items-center space-x-4 md:space-x-8">
-      <!-- Search -->
-      <div class="relative bg-primary rounded-full">
+    <!-- Logo/Brand (Center on mobile, Left on desktop) -->
+    <div class="flex items-center space-x-2 mx-auto md:mx-0">
+      <button class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors hidden md:block">
+        <img src="assets/icons/logo.svg" alt="Fashion Hub" class="w-5 h-5" />
+      </button>
+      <span class="text-lg font-bold text-primary-900 hidden md:inline">Fashion Hub</span>
+    </div>
+
+    <!-- Right Section -->
+    <div class="flex items-center space-x-3 md:space-x-6">
+      <!-- Search (Hidden on mobile) -->
+      <div class="relative bg-primary rounded-full hidden md:block">
         <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">
-          <img src="assets/icons/search.svg" alt="Search" class="w-5 h-5 text-primary-400" />
+          <img src="assets/icons/search.svg" alt="Search" class="w-4 h-4 text-primary-400" />
         </div>
         <input type="text" placeholder="Search" (input)="onSearch($event)"
-          class="ps-10 pe-4 py-2 rounded-full bg-primary text-sm focus:outline-none" />
+          class="ps-9 pe-4 py-1.5 rounded-full bg-primary text-sm focus:outline-none w-40 lg:w-56" />
       </div>
 
+      <!-- Mobile Search Button -->
+      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden">
+        <img src="assets/icons/search.svg" alt="Search" class="w-5 h-5" />
+      </button>
+
       <!-- Icons -->
-      <div class="flex items-center space-x-2">
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+      <div class="flex items-center space-x-1 md:space-x-3">
+        <!-- Hidden on mobile -->
+        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors hidden md:block">
           <img src="assets/icons/moon.svg" alt="Dark mode" class="w-5 h-5" />
         </button>
 
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors hidden md:block">
           <img src="assets/icons/globe.svg" alt="Language" class="w-5 h-5" />
         </button>
 
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100
-          transition-colors relative">
-          <img src="assets/icons/cart.svg" alt="Cart" class="w-5 h-5" />
-          <span
-            class="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5">3</span>
-        </button>
+        <app-cart-dropdown></app-cart-dropdown>
 
-        <div
-          class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+        <!-- Profile - Smaller on mobile -->
+        <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 
+                    flex items-center justify-center overflow-hidden">
           <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=32"
-            alt="Profile" class="w-8 h-8 rounded-full object-cover" />
+            alt="Profile" class="w-full h-full object-cover" />
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Mobile Search Expanded (Hidden by default) -->
+  <div class="px-4 pb-3 md:hidden" *ngIf="showMobileSearch">
+    <div class="relative bg-primary rounded-full">
+      <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">
+        <img src="assets/icons/search.svg" alt="Search" class="w-4 h-4 text-primary-400" />
+      </div>
+      <input type="text" placeholder="Search" (input)="onSearch($event)"
+        class="ps-10 pe-4 py-2 rounded-full bg-primary text-sm focus:outline-none w-full" />
     </div>
   </div>
 </nav>

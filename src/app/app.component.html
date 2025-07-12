@@ -1,14 +1,14 @@
 <div class="min-h-screen flex bg-primary-50">
-  <!-- Sidebar (controlled by state) -->
-  <aside class="shrink-0 transition-all duration-300 fixed md:relative z-30 h-full"
-    [class.w-10]="isMobile && !sidebarOpen" [class.w-64]="!isMobile || sidebarOpen">
-    <app-sidebar (menuStateChange)="onMenuStateChange($event)"></app-sidebar>
+  <aside class="shrink-0 z-30 h-full">
+    <app-sidebar></app-sidebar>
   </aside>
 
-  <div class="flex-1 flex flex-col transition-all duration-300" [class.ml-64]="sidebarOpen">
-    <app-navbar (searchEvent)="onSearch($event)"></app-navbar>
+  <div class="flex-1 flex flex-col transition-all duration-300"
+    [class.ml-64]="(sidebarOpen$ | async) || !(isMobile$ | async)"
+    [class.ml-0]="!(sidebarOpen$ | async) && (isMobile$ | async)">
+    <app-navbar></app-navbar>
     <main class="flex-1 px-4 max-w-screen-xl mx-auto w-full">
-      <app-shop [searchTerm]="searchTerm"></app-shop>
+      <app-shop></app-shop>
     </main>
   </div>
 </div>

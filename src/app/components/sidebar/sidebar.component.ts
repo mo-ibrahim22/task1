@@ -1,24 +1,20 @@
+import { Component, inject } from '@angular/core';
+import { LayoutService } from '../../common/services/layout.service';
+import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  HostListener,
-  OnInit,
-  Output,
-} from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ClickOutsideDirective],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent {
+  private layoutService = inject(LayoutService);
 
-@Output() menuStateChange = new EventEmitter<{ isOpen: boolean, isMobile: boolean }>();
-  isMenuOpen = false;
-  isMobile = false;
+  isMobile$ = this.layoutService.isMobile$;
+  sidebarOpen$ = this.layoutService.sidebarOpen$;
 
   menuItems = [
     {
@@ -53,23 +49,17 @@ export class SidebarComponent implements OnInit {
     },
   ];
 
-
-  ngOnInit() {
-    this.checkScreenSize();
-  }
-
-  @HostListener('window:resize')
-  onResize() {
-    this.checkScreenSize();
-  }
-
-  checkScreenSize() {
-    this.isMobile = window.innerWidth < 768;
-    this.menuStateChange.emit({ isOpen: this.isMenuOpen, isMobile: this.isMobile });
-  }
-
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
-    this.menuStateChange.emit({ isOpen: this.isMenuOpen, isMobile: this.isMobile });
+    this.layoutService.toggleSidebar();
+    console.log(
+      'Sidebar toggled. Current state:',
+      this.layoutService.sidebarOpen
+    );
+  }
+
+  onClickOutside() {
+    if (this.layoutService.isMobile) {
+      this.layoutService.closeSidebar();
+    }
   }
 }
