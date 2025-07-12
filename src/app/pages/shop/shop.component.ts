@@ -1,3 +1,5 @@
+// features/shop/shop.component.ts
+
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemCardComponent } from '../../components/item-card/item-card.component';
@@ -61,7 +63,7 @@ export class ShopComponent implements OnInit {
     this.isloading = true;
     this.productsService.getProducts().subscribe({
       next: (response) => {
-        this.allProducts = response.data;
+        this.allProducts = response;
         this.products = [...this.allProducts];
         this.isloading = false;
       },

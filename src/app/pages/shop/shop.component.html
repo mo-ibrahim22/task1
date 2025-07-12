@@ -45,7 +45,7 @@
   }
   @else {
   <section class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 mb-16 gap-3">
-    @for (product of products; track product._id ; let first=$first ; let last=$last) {
+    @for (product of products; track product.id ; let first=$first ; let last=$last) {
     <app-item-card [product]="product" [first]="first" [last]="last"></app-item-card>
     }
     @empty {

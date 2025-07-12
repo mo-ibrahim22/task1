@@ -1,40 +1,14 @@
 export interface Product {
-  sold: number;
-  images: string[];
-  subcategory: SubCategory[];
-  ratingsQuantity: number;
-  _id: string;
+  id: number;
   title: string;
-  slug: string;
-  description: string;
-  quantity: number;
   price: number;
-  imageCover: string;
-  category: Category;
-  brand: Brand;
-  ratingsAverage: number;
-  createdAt: string;
-  updatedAt: string;
-  id: string;
-}
-
-export interface SubCategory {
-  _id: string;
-  name: string;
-  slug: string;
-  category: string; 
-}
-
-export interface Category {
-  _id: string;
-  name: string;
-  slug: string;
+  description: string;
+  category: string;
   image: string;
+  rating: Rating;
 }
 
-export interface Brand {
-  _id: string;
-  name: string;
-  slug: string;
-  image: string;
+export interface Rating {
+  rate: number;
+  count: number;
 }

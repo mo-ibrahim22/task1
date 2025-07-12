@@ -12,12 +12,10 @@ export class ProductsService {
 
   constructor(private http: HttpClient) {}
 
-  // Fetch all products
-  getProducts(): Observable<{ data: Product[] }> {
-    return this.http.get<{ data: Product[] }>(`${this.apiUrl}/api/v1/products`);
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products`);
   }
 
-  // Fetch single product by ID
   getProductById(id: string): Observable<{ data: Product }> {
     return this.http.get<{ data: Product }>(
       `${this.apiUrl}/api/v1/products/${id}`

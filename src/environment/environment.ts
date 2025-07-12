@@ -1,4 +1,4 @@
 export const environment = {
-    production: false,
-    apiUrl: 'https://ecommerce.routemisr.com'
+  production: false,
+  apiUrl: 'https://fakestoreapi.com',
 };
