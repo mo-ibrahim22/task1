@@ -9,8 +9,7 @@
 <div class="fixed left-0 top-0 h-full bg-primary-50 z-30 transition-all duration-300 ease-in-out border-r border-primary-200"
     [class.w-64]="sidebarOpen$ | async" [class.w-0]="!(sidebarOpen$ | async)"
     [class.-translate-x-full]="(isMobile$ | async) && !(sidebarOpen$ | async)"
-    [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside
-    (clickOutside)="onClickOutside()">
+    [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside>
 
     <!-- Logo/Title -->
     <div class="p-6" *ngIf="sidebarOpen$ | async">

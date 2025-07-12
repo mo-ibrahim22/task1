@@ -36,10 +36,4 @@ export class LayoutService {
   toggleSidebar(): void {
     this.sidebarOpenSubject.next(!this.sidebarOpenSubject.value);
   }
-
-  closeSidebar(): void {
-    if (this.isMobile) {
-      this.sidebarOpenSubject.next(false);
-    }
-  }
 }

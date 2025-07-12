@@ -57,9 +57,5 @@ export class SidebarComponent {
     );
   }
 
-  onClickOutside() {
-    if (this.layoutService.isMobile) {
-      this.layoutService.closeSidebar();
-    }
-  }
+ 
 }
