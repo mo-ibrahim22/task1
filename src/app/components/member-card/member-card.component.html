@@ -1,0 +1,55 @@
+<div
+    class="rounded-xl relative border border-primary-500 bg-primary-50 p-6 shadow-sm transition-all duration-300 hover:shadow-md">
+
+    <div class="mb-4 flex items-start justify-between">
+        <!-- Left Side - Profile Info -->
+        <div class="flex items-center space-x-4">
+
+            <div
+                class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600">
+                <img [src]="member.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=48'"
+                    [alt]="member.name" class="h-12 w-12 rounded-full object-cover" />
+            </div>
+
+            <div>
+                <h3 class="font-semibold text-primary-900">{{ member.name }}</h3>
+                <p class="text-sm text-primary-600">{{ member.role }}</p>
+                <span class="rounded-full px-2 py-1 text-xs border font-bold" [ngClass]="{
+            'bg-tertiary text-tertiary-400 border-tertiary-600': member.category === Category.SOFTWARE,
+            'bg-tertiary-200 text-tertiary-500 border-tertiary-700': member.category === Category.DESIGN
+          }">
+                    {{ member.category }}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-1">
+
+            <button class="text-primary-600 transition-colors hover:text-primary-900">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 12h.01M12 12h.01M19 12h.01" />
+                </svg>
+            </button>
+
+
+        </div>
+    </div>
+
+    <p class="mb-4 line-clamp-2 text-sm text-primary-700">
+        {{ member.description }}
+    </p>
+
+    <div class="flex w-full items-stretch gap-2">
+        <app-contact-button class="flex-1" [status]="member.status"
+            (clicked)="toggleContactStatus(member)"></app-contact-button>
+        <app-profile-button class="w-12 flex-shrink-0"></app-profile-button>
+    </div>
+
+    <span class="rounded-sm px-2 py-1 text-xs font-medium absolute end-0 top-12 " [ngClass]="{
+          'bg-secondary-100 text-secondary-800': member.status === Status.CONTACTED,
+          'bg-primary-200 text-primary-800': member.status === Status.NOT_CONTACTED
+        }">
+        {{ member.status }}
+    </span>
+</div>

@@ -1,0 +1,8 @@
+<button (click)="onClick()"
+    class="w-full h-full rounded-lg px-4 py-2 transition-colors duration-200"
+    [ngClass]="{
+      'bg-primary-500 text-primary-800 hover:bg-secondary-200': status === StatusEnum.NOT_CONTACTED,
+      'bg-secondary-500 text-primary-50 hover:bg-secondary-600': status === StatusEnum.CONTACTED
+    }">
+    {{ status === StatusEnum.CONTACTED ? 'Contacted' : 'Contact' }}
+</button>

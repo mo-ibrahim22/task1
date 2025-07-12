@@ -1,0 +1,31 @@
+<div class="relative bg-primary-50 card-width rounded-xl shadow-sm hover:shadow-md transition-all duration-300 group">
+
+  @if (first) {
+    <span class="absolute top-2 right-2 bg-tertiary-500 text-tertiary-100 text-xs px-2 py-1 rounded z-10">First</span>
+  } @else if (last) {
+    <span class="absolute top-2 right-2 bg-secondary-100 text-secondary-700 text-xs px-2 py-1 rounded z-10">Last</span>
+  }
+
+  <div class="img-height">
+    <img [src]="product.imageCover" [alt]="product.title"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl" />
+  </div>
+
+  <div class="p-4">
+    <h3 class="font-semibold mb-2 line-clamp-1" [ngClass]="{
+        'text-primary-900': !first && !last,
+        'text-tertiary-800': first,
+        'text-secondary-800': last
+      }">
+      {{ product.title }}
+    </h3>
+
+    <p class="text-primary-600 text-sm mb-4 line-clamp-1">
+      {{ product.category.name }}
+    </p>
+
+    <p class="text-lg font-bold" [ngClass]="product.price > 1000 ? 'text-tertiary-400' : 'text-primary-600'">
+      ${{ product.price }}
+    </p>
+  </div>
+</div>
