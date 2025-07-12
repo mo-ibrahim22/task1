@@ -57,5 +57,10 @@ export class SidebarComponent {
     );
   }
 
- 
+  closeSidebar() {
+    // Only close on mobile when clicking outside
+    if (this.layoutService.isMobile) {
+      this.layoutService.toggleSidebar();
+    }
+  }
 }

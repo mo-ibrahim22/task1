@@ -30,17 +30,17 @@ export class CartButtonComponent {
   }
 
   get buttonText(): string {
-    return this.isInCart ? 'Remove from Cart' : 'Add to Cart';
+    return this.isInCart ? 'Remove' : 'Add';
   }
 
   get buttonClasses(): string {
     const baseClasses =
-      'font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2';
+      'font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-1 md:gap-2';
 
     const sizeClasses = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-sm',
-      lg: 'px-6 py-3 text-base',
+      sm: 'px-2 py-1 text-xs md:px-3 md:py-1.5 md:text-sm',
+      md: 'px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm',
+      lg: 'px-4 py-2 text-sm md:px-6 md:py-3 md:text-base',
     };
 
     const variantClasses = {

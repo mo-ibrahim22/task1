@@ -1,14 +1,7 @@
 <nav class="fixed top-0 left-0 right-0 bg-primary-50 border-b border-primary-500 z-20 transition-all duration-300"
-  [class.md:left-64]="(sidebarOpen$ | async) || !(isMobile$ | async)"
+  [class.md:left-64]="(sidebarOpen$ | async) && !(isMobile$ | async)"
   [class.left-0]="!(sidebarOpen$ | async) && (isMobile$ | async)">
   <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
-    <!-- Mobile Menu Button (Left) -->
-    <div class="flex items-center md:hidden">
-      <button (click)="toggleMenu()" class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors">
-        <img [src]="(sidebarOpen$ | async) ? 'assets/icons/close.svg' : 'assets/icons/menu.svg'" alt="Menu"
-          class="w-5 h-5" />
-      </button>
-    </div>
 
     <!-- Logo/Brand (Center on mobile, Left on desktop) -->
     <div class="flex items-center space-x-2 mx-auto md:mx-0">
@@ -30,25 +23,25 @@
       </div>
 
       <!-- Mobile Search Button -->
-      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden">
+      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden"
+        (click)="toggleMobileSearch()" *ngIf="!showMobileSearch">
         <img src="assets/icons/search.svg" alt="Search" class="w-5 h-5" />
       </button>
 
       <!-- Icons -->
       <div class="flex items-center space-x-1 md:space-x-3">
-        <!-- Hidden on mobile -->
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors hidden md:block">
+        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
           <img src="assets/icons/moon.svg" alt="Dark mode" class="w-5 h-5" />
         </button>
 
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors hidden md:block">
+        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
           <img src="assets/icons/globe.svg" alt="Language" class="w-5 h-5" />
         </button>
 
         <app-cart-dropdown></app-cart-dropdown>
 
-        <!-- Profile - Smaller on mobile -->
-        <div class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 
+        <!-- Profile -->
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 
                     flex items-center justify-center overflow-hidden">
           <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=32"
             alt="Profile" class="w-full h-full object-cover" />
@@ -57,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Mobile Search Expanded (Hidden by default) -->
+  <!-- Mobile Search Expanded -->
   <div class="px-4 pb-3 md:hidden" *ngIf="showMobileSearch">
     <div class="relative bg-primary rounded-full">
       <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">

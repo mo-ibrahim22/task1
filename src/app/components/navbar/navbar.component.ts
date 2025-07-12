@@ -18,10 +18,6 @@ export class NavbarComponent {
   sidebarOpen$ = this.layoutService.sidebarOpen$;
   showMobileSearch = false;
 
-  toggleMenu() {
-    this.layoutService.toggleSidebar();
-  }
-
   toggleMobileSearch() {
     this.showMobileSearch = !this.showMobileSearch;
   }

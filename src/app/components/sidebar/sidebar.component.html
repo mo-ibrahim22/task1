@@ -1,15 +1,9 @@
-<div class="fixed left-4 top-4 z-40 md:hidden" *ngIf="isMobile$ | async">
-    <button (click)="toggleMenu()" class="p-2 focus:outline-none">
-        <img [src]="(sidebarOpen$ | async) ? 'assets/icons/close.svg' : 'assets/icons/menu.svg'" alt="Menu"
-            class="w-6 h-6">
-    </button>
-</div>
-
 <!-- Sidebar -->
 <div class="fixed left-0 top-0 h-full bg-primary-50 z-30 transition-all duration-300 ease-in-out border-r border-primary-200"
     [class.w-64]="sidebarOpen$ | async" [class.w-0]="!(sidebarOpen$ | async)"
     [class.-translate-x-full]="(isMobile$ | async) && !(sidebarOpen$ | async)"
-    [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside>
+    [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside
+    (clickOutside)="closeSidebar()">
 
     <!-- Logo/Title -->
     <div class="p-6" *ngIf="sidebarOpen$ | async">
