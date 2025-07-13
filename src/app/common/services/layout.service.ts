@@ -23,10 +23,11 @@ export class LayoutService {
     const isMobile = width < 768;
     this.isMobileSubject.next(isMobile);
 
-    // Auto-close on mobile
-    if (isMobile && this.sidebarOpen) {
+    // Auto-close sidebar when switching to mobile
+    if (isMobile) {
       this.sidebarOpenSubject.next(false);
-    } else if (!isMobile && !this.sidebarOpen) {
+    } else {
+      // Auto-open sidebar when switching to desktop
       this.sidebarOpenSubject.next(true);
     }
   }

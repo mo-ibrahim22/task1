@@ -50,8 +50,6 @@ export class SidebarComponent {
   ];
 
   closeSidebar() {
-    if (this.layoutService.isMobile) {
-      this.layoutService.closeSidebar();
-    }
+    this.layoutService.closeSidebar();
   }
 }

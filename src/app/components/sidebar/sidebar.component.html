@@ -3,6 +3,7 @@
     [class.w-64]="sidebarOpen$ | async" [class.w-0]="!(sidebarOpen$ | async)"
     [class.-translate-x-full]="(isMobile$ | async) && !(sidebarOpen$ | async)"
     [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside
+    [enableClickOutside]="((isMobile$ | async) ?? false) && ((sidebarOpen$ | async) ?? false)"
     (clickOutside)="closeSidebar()">
 
     @if (sidebarOpen$ | async) {
