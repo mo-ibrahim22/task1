@@ -23,17 +23,19 @@ export class LayoutService {
     const isMobile = width < 768;
     this.isMobileSubject.next(isMobile);
 
-    // Auto-close on mobile if not already toggled
+    // Auto-close on mobile
     if (isMobile && this.sidebarOpen) {
       this.sidebarOpenSubject.next(false);
-    }
-    // Auto-open on desktop
-    else if (!isMobile && !this.sidebarOpen) {
+    } else if (!isMobile && !this.sidebarOpen) {
       this.sidebarOpenSubject.next(true);
     }
   }
 
   toggleSidebar(): void {
     this.sidebarOpenSubject.next(!this.sidebarOpenSubject.value);
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpenSubject.next(false);
   }
 }

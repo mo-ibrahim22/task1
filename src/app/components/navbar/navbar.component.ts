@@ -3,11 +3,12 @@ import { LayoutService } from '../../common/services/layout.service';
 import { FilterService } from '../../common/services/filter.service';
 import { CommonModule } from '@angular/common';
 import { CartDropdownComponent } from '../cart-dropdown/cart-dropdown.component';
+import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, CartDropdownComponent],
+  imports: [CommonModule, CartDropdownComponent, ClickOutsideDirective],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
@@ -22,8 +23,16 @@ export class NavbarComponent {
     this.showMobileSearch = !this.showMobileSearch;
   }
 
+  closeMobileSearch() {
+    this.showMobileSearch = false;
+  }
+
   onSearch(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.filterService.setSearchTerm(inputElement.value);
+  }
+
+  toggleMenu() {
+    this.layoutService.toggleSidebar();
   }
 }

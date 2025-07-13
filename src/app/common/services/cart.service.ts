@@ -3,22 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environment/environment';
 import { Product } from '../models/product.model';
-
-export interface CartItem {
-  productId: number;
-  quantity: number;
-}
-
-export interface Cart {
-  id: number;
-  userId: number;
-  date: string;
-  products: CartItem[];
-}
-
-export interface CartProduct extends Product {
-  quantity: number;
-}
+import { Cart, CartItem, CartProduct } from '../models/cart.model';
 
 @Injectable({
   providedIn: 'root',

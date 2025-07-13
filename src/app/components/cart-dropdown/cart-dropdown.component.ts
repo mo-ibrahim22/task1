@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartService, CartProduct } from '../../common/services/cart.service';
+import { CartService } from '../../common/services/cart.service';
+import { CartProduct } from '../../common/models/cart.model';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 
 @Component({

@@ -49,18 +49,9 @@ export class SidebarComponent {
     },
   ];
 
-  toggleMenu() {
-    this.layoutService.toggleSidebar();
-    console.log(
-      'Sidebar toggled. Current state:',
-      this.layoutService.sidebarOpen
-    );
-  }
-
   closeSidebar() {
-    // Only close on mobile when clicking outside
     if (this.layoutService.isMobile) {
-      this.layoutService.toggleSidebar();
+      this.layoutService.closeSidebar();
     }
   }
 }

@@ -1,34 +1,30 @@
 <!-- Sidebar -->
-<div class="fixed left-0 top-0 h-full bg-primary-50 z-30 transition-all duration-300 ease-in-out border-r border-primary-200"
+<div class="fixed left-0 top-0 h-full bg-primary-50 z-30 transition-all duration-300 ease-in-out border-r border-primary-200 overflow-y-auto"
     [class.w-64]="sidebarOpen$ | async" [class.w-0]="!(sidebarOpen$ | async)"
     [class.-translate-x-full]="(isMobile$ | async) && !(sidebarOpen$ | async)"
     [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside
     (clickOutside)="closeSidebar()">
 
-    <!-- Logo/Title -->
-    <div class="p-6" *ngIf="sidebarOpen$ | async">
-        <h1 class="text-lg font-medium text-primary-900">
-            Fashion Hub
-        </h1>
+    @if (sidebarOpen$ | async) {
+    <div class="p-6">
+        <h1 class="text-lg font-medium text-primary-900">Fashion Hub</h1>
     </div>
 
-    <!-- Menu Items -->
-    <aside class="mt-1" *ngIf="sidebarOpen$ | async">
+    <aside class="mt-1">
         <ul class="space-y-2 px-4">
             @for (item of menuItems; track item) {
             <li class="text-sm font-medium">
                 <a [href]="item.href"
-                    class="flex items-center text-primary-900 px-2 md:px-4 py-3 rounded-full transition-colors duration-200 hover:bg-primary-50-100 group"
+                    class="flex items-center text-primary-900 px-2 md:px-4 py-3 rounded-full transition-colors duration-200 hover:bg-primary-100 group"
                     [class.bg-primary]="item.active">
                     <div class="w-5 h-5 me-3 flex justify-center">
                         <img [src]="item.iconPath" [alt]="item.label + ' icon'" class="w-5 h-5" />
                     </div>
-                    <span class="font-medium">
-                        {{ item.label }}
-                    </span>
+                    <span class="font-medium">{{ item.label }}</span>
                 </a>
             </li>
             }
         </ul>
     </aside>
+    }
 </div>

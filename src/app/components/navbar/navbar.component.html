@@ -1,9 +1,16 @@
 <nav class="fixed top-0 left-0 right-0 bg-primary-50 border-b border-primary-500 z-20 transition-all duration-300"
-  [class.md:left-64]="(sidebarOpen$ | async) && !(isMobile$ | async)"
-  [class.left-0]="!(sidebarOpen$ | async) && (isMobile$ | async)">
+  [class.md:left-64]="(sidebarOpen$ | async) && !(isMobile$ | async)">
   <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
 
-    <!-- Logo/Brand (Center on mobile, Left on desktop) -->
+    <!-- Toggle Button (visible only on mobile) -->
+    <button class="md:hidden bg-primary-600 text-white p-2 rounded-full shadow-md" (click)="toggleMenu()">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+
+    <!-- Logo/Brand -->
     <div class="flex items-center space-x-2 mx-auto md:mx-0">
       <button class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors hidden md:block">
         <img src="assets/icons/logo.svg" alt="Fashion Hub" class="w-5 h-5" />
@@ -13,7 +20,7 @@
 
     <!-- Right Section -->
     <div class="flex items-center space-x-3 md:space-x-6">
-      <!-- Search (Hidden on mobile) -->
+      <!-- Desktop Search -->
       <div class="relative bg-primary rounded-full hidden md:block">
         <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">
           <img src="assets/icons/search.svg" alt="Search" class="w-4 h-4 text-primary-400" />
@@ -22,11 +29,13 @@
           class="ps-9 pe-4 py-1.5 rounded-full bg-primary text-sm focus:outline-none w-40 lg:w-56" />
       </div>
 
-      <!-- Mobile Search Button -->
-      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden"
-        (click)="toggleMobileSearch()" *ngIf="!showMobileSearch">
+      <!-- Mobile Search Toggle -->
+      @if (!showMobileSearch) {
+      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden mobile-search-toggle"
+        (click)="toggleMobileSearch()">
         <img src="assets/icons/search.svg" alt="Search" class="w-5 h-5" />
       </button>
+      }
 
       <!-- Icons -->
       <div class="flex items-center space-x-1 md:space-x-3">
@@ -50,14 +59,16 @@
     </div>
   </div>
 
-  <!-- Mobile Search Expanded -->
-  <div class="px-4 pb-3 md:hidden" *ngIf="showMobileSearch">
+  <!-- Mobile Search Input -->
+  @if (showMobileSearch) {
+  <div class="px-4 pb-3 md:hidden mobile-search-box" appClickOutside (clickOutside)="closeMobileSearch()">
     <div class="relative bg-primary rounded-full">
       <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">
         <img src="assets/icons/search.svg" alt="Search" class="w-4 h-4 text-primary-400" />
       </div>
-      <input type="text" placeholder="Search" (input)="onSearch($event)"
+      <input id="mobileSearchInput" type="text" placeholder="Search" (input)="onSearch($event)"
         class="ps-10 pe-4 py-2 rounded-full bg-primary text-sm focus:outline-none w-full" />
     </div>
   </div>
+  }
 </nav>
