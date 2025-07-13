@@ -3,10 +3,12 @@
   <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
 
     <!-- Toggle Button (visible only on mobile) -->
-    <button class="md:hidden bg-primary-600 text-white p-2 rounded-full shadow-md" (click)="toggleMenu()">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
+    <button class="md:hidden bg-primary-500 text-primary-900 p-2 rounded-full shadow-md" (click)="toggleMenu()">
+      @if (sidebarOpen$ | async) {
+      <img src="assets/icons/close.svg" alt="Close menu" class="w-5 h-5" />
+      } @else {
+      <img src="assets/icons/menu.svg" alt="Open menu" class="w-5 h-5" />
+      }
     </button>
 
 
