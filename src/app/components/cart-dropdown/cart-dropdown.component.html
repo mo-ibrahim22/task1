@@ -32,12 +32,12 @@
 
                     <div class="flex items-center gap-2">
                         <app-button iconSrc="assets/icons/minus.svg" iconPosition="center"
-                            customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
+                            customClass="w-8 h-8 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
                             (clicked)="updateQuantity(item.id, item.quantity - 1)">
                         </app-button>
                         <span class="text-sm font-medium w-8 text-center">{{ item.quantity }}</span>
                         <app-button iconSrc="assets/icons/plus.svg" iconPosition="center"
-                            customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
+                            customClass="w-8 h-8 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
                             (clicked)="updateQuantity(item.id, item.quantity + 1)">
                         </app-button>
                         <app-button iconSrc="assets/icons/trash.svg" iconPosition="center"
