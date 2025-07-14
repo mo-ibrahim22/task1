@@ -14,28 +14,40 @@
             placeholder="Confirm your password"></app-input-field>
 
         <div formArrayName="phones" class="mb-4">
-            <div *ngFor="let phone of phones.controls; let i=index" class="mb-2">
-                <app-input-field [formGroup]="getPhoneGroup(i)" controlName="phone" label="Phone Number {{i + 1}}"
+            @for (phone of phones.controls; track $index) {
+            <div class="mb-2">
+                <app-input-field [formGroup]="getPhoneGroup($index)" controlName="phone" [label]="'Phone Number ' + ($index + 1)"
                     type="tel" placeholder="Enter phone number"></app-input-field>
-                <app-button *ngIf="phones.controls.length > 1" text="Remove Phone"
-                    customClass="bg-red-500 text-white hover:bg-red-600 mt-2" (clicked)="removePhone(i)"></app-button>
+
+                @if (phones.controls.length > 1) {
+                <app-button text="Remove Phone" customClass="bg-red-500 text-white hover:bg-red-600 mt-2"
+                    (clicked)="removePhone($index)"></app-button>
+                }
             </div>
+            }
+
             <app-button text="Add Another Phone" customClass="bg-blue-500 text-white hover:bg-blue-600"
                 (clicked)="addPhone()"></app-button>
         </div>
 
         <div formArrayName="addresses" class="mb-4">
-            <div *ngFor="let address of addresses.controls; let i=index" class="mb-2">
-                <app-input-field [formGroup]="getAddressGroup(i)" controlName="address" label="Address {{i + 1}}"
+            @for (address of addresses.controls; track $index) {
+            <div class="mb-2">
+                <app-input-field [formGroup]="getAddressGroup($index)" controlName="address" [label]="'Address ' + ($index + 1)"
                     type="text" placeholder="Enter address"></app-input-field>
-                <app-button *ngIf="addresses.controls.length > 1" text="Remove Address"
-                    customClass="bg-red-500 text-white hover:bg-red-600 mt-2" (clicked)="removeAddress(i)"></app-button>
+
+                @if (addresses.controls.length > 1) {
+                <app-button text="Remove Address" customClass="bg-red-500 text-white hover:bg-red-600 mt-2"
+                    (clicked)="removeAddress($index)"></app-button>
+                }
             </div>
+            }
+
             <app-button text="Add Another Address" customClass="bg-blue-500 text-white hover:bg-blue-600"
                 (clicked)="addAddress()"></app-button>
         </div>
 
         <app-button type="submit" text="Sign Up" customClass="w-full bg-green-500 text-white hover:bg-green-600"
-            [disabled]="signupForm.invalid"></app-button>
+           ></app-button>
     </form>
 </div>
