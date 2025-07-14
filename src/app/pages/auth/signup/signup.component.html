@@ -1,0 +1,41 @@
+<div class="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <app-input-field [formGroup]="signupForm" controlName="name" label="Name" type="text"
+            placeholder="Enter your name"></app-input-field>
+
+        <app-input-field [formGroup]="signupForm" controlName="email" label="Email" type="email"
+            placeholder="Enter your email"></app-input-field>
+
+        <app-input-field [formGroup]="signupForm" controlName="password" label="Password" type="password"
+            placeholder="Enter your password"></app-input-field>
+
+        <app-input-field [formGroup]="signupForm" controlName="confirmPassword" label="Confirm Password" type="password"
+            placeholder="Confirm your password"></app-input-field>
+
+        <div formArrayName="phones" class="mb-4">
+            <div *ngFor="let phone of phones.controls; let i=index" class="mb-2">
+                <app-input-field [formGroup]="getPhoneGroup(i)" controlName="phone" label="Phone Number {{i + 1}}"
+                    type="tel" placeholder="Enter phone number"></app-input-field>
+                <app-button *ngIf="phones.controls.length > 1" text="Remove Phone"
+                    customClass="bg-red-500 text-white hover:bg-red-600 mt-2" (clicked)="removePhone(i)"></app-button>
+            </div>
+            <app-button text="Add Another Phone" customClass="bg-blue-500 text-white hover:bg-blue-600"
+                (clicked)="addPhone()"></app-button>
+        </div>
+
+        <div formArrayName="addresses" class="mb-4">
+            <div *ngFor="let address of addresses.controls; let i=index" class="mb-2">
+                <app-input-field [formGroup]="getAddressGroup(i)" controlName="address" label="Address {{i + 1}}"
+                    type="text" placeholder="Enter address"></app-input-field>
+                <app-button *ngIf="addresses.controls.length > 1" text="Remove Address"
+                    customClass="bg-red-500 text-white hover:bg-red-600 mt-2" (clicked)="removeAddress(i)"></app-button>
+            </div>
+            <app-button text="Add Another Address" customClass="bg-blue-500 text-white hover:bg-blue-600"
+                (clicked)="addAddress()"></app-button>
+        </div>
+
+        <app-button type="submit" text="Sign Up" customClass="w-full bg-green-500 text-white hover:bg-green-600"
+            [disabled]="signupForm.invalid"></app-button>
+    </form>
+</div>

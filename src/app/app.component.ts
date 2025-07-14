@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { ShopComponent } from "./pages/shop/shop.component";
+import { SignupComponent } from "./pages/auth/signup/signup.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, NavbarComponent, ShopComponent],
+  imports: [CommonModule, SidebarComponent, NavbarComponent, ShopComponent, SignupComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
