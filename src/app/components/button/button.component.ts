@@ -33,15 +33,15 @@ export class ButtonComponent {
   // Icon configuration - only using icon files now
   @Input() iconSrc: string = ''; // Image source for icon
   @Input() iconPosition: IconPosition = 'left';
-  @Input() iconClass: string = 'w-4 h-4';
+  @Input() iconClass: string = 'w-5 h-5';
 
   // Secondary icon (for between position)
   @Input() secondaryIconSrc: string = '';
-  @Input() secondaryIconClass: string = 'w-4 h-4';
+  @Input() secondaryIconClass: string = 'w-5 h-5';
 
   // Loading icon
   @Input() loadingIconSrc: string = '';
-  @Input() loadingIconClass: string = 'w-4 h-4 animate-spin';
+  @Input() loadingIconClass: string = 'w-5 h-5 animate-spin';
 
   // Badge/Counter
   @Input() badge: string | number = '';
@@ -76,7 +76,7 @@ export class ButtonComponent {
     };
 
     const baseClass =
-      'inline-flex items-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed relative';
+      'inline-flex items-center font-medium rounded-lg transition-all duration-200  disabled:opacity-50 disabled:cursor-not-allowed relative';
 
     return `${baseClass} ${sizeClasses[this.size]} ${
       textAlignClasses[this.textAlign]
