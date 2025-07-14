@@ -4,7 +4,7 @@ import { FilterService } from '../../common/services/filter.service';
 import { CommonModule } from '@angular/common';
 import { CartDropdownComponent } from '../cart-dropdown/cart-dropdown.component';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-navbar',

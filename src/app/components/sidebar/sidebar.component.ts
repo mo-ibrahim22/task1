@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { LayoutService } from '../../common/services/layout.service';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 import { CommonModule } from '@angular/common';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-sidebar',

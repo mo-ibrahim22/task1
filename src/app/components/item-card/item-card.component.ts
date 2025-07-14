@@ -2,7 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Product } from '../../common/models/product.model';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../common/services/modal.service';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 import { CartService } from '../../common/services/cart.service';
 
 @Component({

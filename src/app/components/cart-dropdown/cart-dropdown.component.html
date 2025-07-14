@@ -31,19 +31,17 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <app-button text="-"
+                        <app-button iconSrc="assets/icons/minus.svg" iconPosition="center"
                             customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
                             (clicked)="updateQuantity(item.id, item.quantity - 1)">
                         </app-button>
                         <span class="text-sm font-medium w-8 text-center">{{ item.quantity }}</span>
-                        <app-button text="+"
+                        <app-button iconSrc="assets/icons/plus.svg" iconPosition="center"
                             customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
                             (clicked)="updateQuantity(item.id, item.quantity + 1)">
                         </app-button>
-                        <app-button
-                            icon="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            iconPosition="center" customClass="ml-2 text-red-500 hover:text-red-700"
-                            (clicked)="removeFromCart(item.id)">
+                        <app-button iconSrc="assets/icons/trash.svg" iconPosition="center"
+                            customClass="ml-2 text-red-500 hover:text-red-700" (clicked)="removeFromCart(item.id)">
                         </app-button>
                     </div>
                 </div>

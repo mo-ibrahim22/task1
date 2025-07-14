@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../common/services/modal.service';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 import { CartService } from '../../common/services/cart.service';
 
 @Component({

@@ -30,19 +30,17 @@ export class ButtonComponent {
   @Input() text: string = '';
   @Input() textAlign: TextAlign = 'center';
 
-  // Icon configuration
-  @Input() icon: string = ''; // SVG path or icon name
+  // Icon configuration - only using icon files now
   @Input() iconSrc: string = ''; // Image source for icon
   @Input() iconPosition: IconPosition = 'left';
   @Input() iconClass: string = 'w-4 h-4';
 
   // Secondary icon (for between position)
-  @Input() secondaryIcon: string = '';
   @Input() secondaryIconSrc: string = '';
   @Input() secondaryIconClass: string = 'w-4 h-4';
 
   // Loading icon
-  @Input() loadingIcon: string = '';
+  @Input() loadingIconSrc: string = '';
   @Input() loadingIconClass: string = 'w-4 h-4 animate-spin';
 
   // Badge/Counter
@@ -90,12 +88,12 @@ export class ButtonComponent {
   }
 
   get shouldShowIcon(): boolean {
-    return (!!this.icon || !!this.iconSrc) && !this.loading;
+    return !!this.iconSrc && !this.loading;
   }
 
   get shouldShowSecondaryIcon(): boolean {
     return (
-      (!!this.secondaryIcon || !!this.secondaryIconSrc) &&
+      !!this.secondaryIconSrc &&
       this.iconPosition === 'between' &&
       !this.loading
     );

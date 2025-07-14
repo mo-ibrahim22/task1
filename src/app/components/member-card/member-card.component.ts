@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Member } from '../../common/models/member.model';
 import { Category } from '../../common/enums/category.enum';
 import { Status } from '../../common/enums/status.enum';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-member-card',

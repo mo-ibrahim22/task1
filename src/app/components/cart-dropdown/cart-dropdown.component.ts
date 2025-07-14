@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CartService } from '../../common/services/cart.service';
 import { CartProduct } from '../../common/models/cart.model';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
-import { ButtonComponent } from '../ui/button/button.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-cart-dropdown',
