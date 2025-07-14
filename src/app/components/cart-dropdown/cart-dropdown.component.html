@@ -1,18 +1,9 @@
 <div class="relative">
     <!-- Cart Button -->
-    <button (click)="toggleDropdown()"
-        class="p-2 bg-primary rounded-full hover:bg-primary-100 transition-colors relative">
-        <img src="assets/icons/cart.svg" alt="Cart" class="w-5 h-5" />
-
-        @if (cartService.cartCount$ | async; as count) {
-
-        <span
-            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center">
-            {{ count }}
-        </span>
-
-        }
-    </button>
+    <app-button iconSrc="assets/icons/cart.svg" iconPosition="center" [badge]="(cartService.cartCount$ | async) ?? 0"
+        customClass="p-2 bg-primary rounded-full hover:bg-primary-100 transition-colors relative"
+        (clicked)="toggleDropdown()">
+    </app-button>
 
     <!-- Dropdown -->
     @if (isOpen) {
@@ -40,22 +31,20 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button (click)="updateQuantity(item.id, item.quantity - 1)"
-                            class="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm">
-                            -
-                        </button>
+                        <app-button text="-"
+                            customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
+                            (clicked)="updateQuantity(item.id, item.quantity - 1)">
+                        </app-button>
                         <span class="text-sm font-medium w-8 text-center">{{ item.quantity }}</span>
-                        <button (click)="updateQuantity(item.id, item.quantity + 1)"
-                            class="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm">
-                            +
-                        </button>
-                        <button (click)="removeFromCart(item.id)" class="ml-2 text-red-500 hover:text-red-700">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                </path>
-                            </svg>
-                        </button>
+                        <app-button text="+"
+                            customClass="w-6 h-6 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-sm"
+                            (clicked)="updateQuantity(item.id, item.quantity + 1)">
+                        </app-button>
+                        <app-button
+                            icon="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                            iconPosition="center" customClass="ml-2 text-red-500 hover:text-red-700"
+                            (clicked)="removeFromCart(item.id)">
+                        </app-button>
                     </div>
                 </div>
                 }
@@ -67,10 +56,9 @@
                         <span class="font-bold text-lg text-primary-900">${{ getTotalPrice(items).toFixed(2) }}</span>
                     </div>
 
-                    <button
-                        class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                        Checkout
-                    </button>
+                    <app-button text="Checkout"
+                        customClass="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    </app-button>
                 </div>
             </div>
             }

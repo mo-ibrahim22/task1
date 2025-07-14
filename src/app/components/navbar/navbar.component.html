@@ -3,20 +3,17 @@
   <div class="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
 
     <!-- Toggle Button (visible only on mobile) -->
-    <button class="md:hidden bg-primary-500 text-primary-900 p-2 rounded-full shadow-md" (click)="toggleMenu()">
-      @if (sidebarOpen$ | async) {
-      <img src="assets/icons/close.svg" alt="Close menu" class="w-5 h-5" />
-      } @else {
-      <img src="assets/icons/menu.svg" alt="Open menu" class="w-5 h-5" />
-      }
-    </button>
+    <app-button class="md:hidden"
+      [iconSrc]="(sidebarOpen$ | async) ? 'assets/icons/close.svg' : 'assets/icons/menu.svg'" iconPosition="center"
+      customClass="bg-primary-500 text-primary-900 p-2 rounded-full shadow-md" (clicked)="toggleMenu()">
+    </app-button>
 
 
     <!-- Logo/Brand -->
     <div class="flex items-center space-x-2 mx-auto md:mx-0">
-      <button class="p-2 rounded-lg hover:bg-primary-50-100 transition-colors hidden md:block">
-        <img src="assets/icons/logo.svg" alt="Fashion Hub" class="w-5 h-5" />
-      </button>
+      <app-button class="hidden md:block" iconSrc="assets/icons/logo.svg" iconPosition="center"
+        customClass="p-2 rounded-lg hover:bg-primary-50-100 transition-colors">
+      </app-button>
       <span class="text-lg font-bold text-primary-900 hidden md:inline">Fashion Hub</span>
     </div>
 
@@ -33,21 +30,20 @@
 
       <!-- Mobile Search Toggle -->
       @if (!showMobileSearch) {
-      <button class="p-2 rounded-full hover:bg-primary-50-100 transition-colors md:hidden mobile-search-toggle"
-        (click)="toggleMobileSearch()">
-        <img src="assets/icons/search.svg" alt="Search" class="w-5 h-5" />
-      </button>
+      <app-button class="md:hidden mobile-search-toggle" iconSrc="assets/icons/search.svg" iconPosition="center"
+        customClass="p-2 rounded-full hover:bg-primary-50-100 transition-colors" (clicked)="toggleMobileSearch()">
+      </app-button>
       }
 
       <!-- Icons -->
       <div class="flex items-center space-x-1 md:space-x-3">
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
-          <img src="assets/icons/moon.svg" alt="Dark mode" class="w-5 h-5" />
-        </button>
+        <app-button iconSrc="assets/icons/moon.svg" iconPosition="center"
+          customClass="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+        </app-button>
 
-        <button class="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
-          <img src="assets/icons/globe.svg" alt="Language" class="w-5 h-5" />
-        </button>
+        <app-button iconSrc="assets/icons/globe.svg" iconPosition="center"
+          customClass="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+        </app-button>
 
         <app-cart-dropdown></app-cart-dropdown>
 

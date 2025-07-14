@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { LayoutService } from '../../common/services/layout.service';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../ui/button/button.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, ClickOutsideDirective],
+  imports: [CommonModule, ClickOutsideDirective, ButtonComponent],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })

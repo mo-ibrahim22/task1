@@ -4,11 +4,17 @@ import { FilterService } from '../../common/services/filter.service';
 import { CommonModule } from '@angular/common';
 import { CartDropdownComponent } from '../cart-dropdown/cart-dropdown.component';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
+import { ButtonComponent } from '../ui/button/button.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, CartDropdownComponent, ClickOutsideDirective],
+  imports: [
+    CommonModule,
+    CartDropdownComponent,
+    ClickOutsideDirective,
+    ButtonComponent,
+  ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
