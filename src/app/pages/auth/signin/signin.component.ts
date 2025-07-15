@@ -22,6 +22,8 @@ import { ButtonComponent } from '../../../components/button/button.component';
 })
 export class SigninComponent implements OnInit {
   signinForm!: FormGroup;
+  isSubmitting = false;
+  formTouched = false;
 
   constructor(private fb: FormBuilder) {}
 
@@ -33,8 +35,18 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formTouched = true;
     if (this.signinForm.valid) {
+      this.isSubmitting = true;
       console.log('Signin Form Data:', this.signinForm.value);
+
+      // Simulate API call
+      setTimeout(() => {
+        this.isSubmitting = false;
+      }, 2000);
+    } else {
+      // Mark all fields as touched to show validation errors
+      this.signinForm.markAllAsTouched();
     }
   }
 }
