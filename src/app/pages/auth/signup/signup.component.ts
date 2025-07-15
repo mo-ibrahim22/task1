@@ -54,7 +54,7 @@ export class SignupComponent implements OnInit {
 
   createPhoneGroup(): FormGroup {
     return this.fb.group({
-      phone: ['', [Validators.required, Validators.pattern(/^\+?\d{10,11}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\+?\d{10,12}$/)]],
     });
   }
 

@@ -5,20 +5,20 @@
     <!-- Toggle Button (visible only on mobile) -->
     <app-button class="md:hidden"
       [iconSrc]="(sidebarOpen$ | async) ? 'assets/icons/close.svg' : 'assets/icons/menu.svg'" iconPosition="center"
-      customClass="bg-primary-500 text-primary-900 p-2 rounded-full shadow-md" (clicked)="toggleMenu()">
+      [shape]="'circle'" customClass="bg-primary-500 text-primary-900 shadow-md" (clicked)="toggleMenu()">
     </app-button>
-
 
     <!-- Logo/Brand -->
     <div class="flex items-center space-x-2 mx-auto md:mx-0">
-      <app-button class="hidden md:block" iconSrc="assets/icons/logo.svg" iconPosition="center"
-        customClass="p-2 rounded-lg hover:bg-primary-50-100 transition-colors">
+      <app-button class="hidden md:block" iconSrc="assets/icons/logo.svg" iconPosition="center" [shape]="'circle'"
+        customClass="hover:bg-primary-50-100 transition-colors">
       </app-button>
       <span class="text-lg font-bold text-primary-900 hidden md:inline">Fashion Hub</span>
     </div>
 
     <!-- Right Section -->
     <div class="flex items-center space-x-3 md:space-x-6">
+
       <!-- Desktop Search -->
       <div class="relative bg-primary rounded-full hidden md:block">
         <div class="absolute inset-y-0 left-0 ps-3 flex items-center pointer-events-none">
@@ -31,18 +31,18 @@
       <!-- Mobile Search Toggle -->
       @if (!showMobileSearch) {
       <app-button class="md:hidden mobile-search-toggle" iconSrc="assets/icons/search.svg" iconPosition="center"
-        customClass="p-2 rounded-full hover:bg-primary-50-100 transition-colors" (clicked)="toggleMobileSearch()">
+        [shape]="'circle'" customClass="hover:bg-primary-50-100 transition-colors" (clicked)="toggleMobileSearch()">
       </app-button>
       }
 
       <!-- Icons -->
       <div class="flex items-center space-x-1 md:space-x-3">
-        <app-button iconSrc="assets/icons/moon.svg" iconPosition="center"
-          customClass="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+        <app-button iconSrc="assets/icons/moon.svg" iconPosition="center" [shape]="'circle'"
+          customClass="bg-primary hover:bg-primary-50-100 transition-colors">
         </app-button>
 
-        <app-button iconSrc="assets/icons/globe.svg" iconPosition="center"
-          customClass="p-2 bg-primary rounded-full hover:bg-primary-50-100 transition-colors">
+        <app-button iconSrc="assets/icons/globe.svg" iconPosition="center" [shape]="'circle'"
+          customClass="bg-primary hover:bg-primary-50-100 transition-colors">
         </app-button>
 
         <app-cart-dropdown></app-cart-dropdown>

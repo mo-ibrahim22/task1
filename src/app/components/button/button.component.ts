@@ -25,33 +25,27 @@ export class ButtonComponent {
   @Input() loading: boolean = false;
   @Input() customClass: string = '';
   @Input() size: ButtonSize = 'md';
+  @Input() shape: 'default' | 'circle' = 'default'; // NEW SHAPE SUPPORT
 
-  // Text content
   @Input() text: string = '';
   @Input() textAlign: TextAlign = 'center';
 
-  // Icon configuration - only using icon files now
-  @Input() iconSrc: string = ''; // Image source for icon
+  @Input() iconSrc: string = '';
   @Input() iconPosition: IconPosition = 'left';
   @Input() iconClass: string = 'w-5 h-5';
 
-  // Secondary icon (for between position)
   @Input() secondaryIconSrc: string = '';
   @Input() secondaryIconClass: string = 'w-5 h-5';
 
-  // Loading icon
   @Input() loadingIconSrc: string = '';
   @Input() loadingIconClass: string = 'w-5 h-5 animate-spin';
 
-  // Badge/Counter
   @Input() badge: string | number = '';
   @Input() badgeClass: string =
     'absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center';
 
-  // Events
   @Output() clicked = new EventEmitter<Event>();
 
-  // Content projection for custom content
   @ContentChild('customContent') customContent?: TemplateRef<any>;
 
   onClick(event: Event): void {
@@ -76,11 +70,16 @@ export class ButtonComponent {
     };
 
     const baseClass =
-      'inline-flex items-center font-medium rounded-lg transition-all duration-200  disabled:opacity-50 disabled:cursor-not-allowed relative';
+      'inline-flex items-center font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed relative';
 
-    return `${baseClass} ${sizeClasses[this.size]} ${
-      textAlignClasses[this.textAlign]
-    } ${this.customClass}`;
+    const shapeClass =
+      this.shape === 'circle'
+        ? 'rounded-full w-8 h-8 justify-center items-center p-0'
+        : 'rounded-lg ' + sizeClasses[this.size];
+
+    return `${baseClass} ${shapeClass} ${textAlignClasses[this.textAlign]} ${
+      this.customClass
+    }`;
   }
 
   get shouldShowText(): boolean {
