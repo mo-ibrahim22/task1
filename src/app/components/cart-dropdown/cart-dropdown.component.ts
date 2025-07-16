@@ -16,6 +16,7 @@ export class CartDropdownComponent implements OnInit {
   cart = this.cartService.cart;
 
   isOpen = signal(false);
+  processingItems = signal<Set<string>>(new Set());
 
   ngOnInit(): void {
     // Load cart when the component initializes
@@ -30,15 +31,65 @@ export class CartDropdownComponent implements OnInit {
     this.isOpen.set(false);
   }
 
+  isProcessingItem(productId: string): boolean {
+    return this.processingItems().has(productId);
+  }
+
+  private setProcessingItem(productId: string, processing: boolean): void {
+    const current = new Set(this.processingItems());
+    if (processing) {
+      current.add(productId);
+    } else {
+      current.delete(productId);
+    }
+    this.processingItems.set(current);
+  }
+
   removeFromCart(productId: string): void {
-    this.cartService.removeItem(productId).subscribe();
+    if (this.isProcessingItem(productId)) {
+      return;
+    }
+
+    this.setProcessingItem(productId, true);
+
+    this.cartService.removeItem(productId).subscribe({
+      next: () => {
+        this.setProcessingItem(productId, false);
+      },
+      error: (error) => {
+        console.error('Error removing from cart:', error);
+        this.setProcessingItem(productId, false);
+      },
+    });
   }
 
   updateQuantity(productId: string, quantity: number): void {
+    if (this.isProcessingItem(productId)) {
+      return;
+    }
+
+    this.setProcessingItem(productId, true);
+
     if (quantity <= 0) {
-      this.removeFromCart(productId);
+      this.cartService.removeItem(productId).subscribe({
+        next: () => {
+          this.setProcessingItem(productId, false);
+        },
+        error: (error) => {
+          console.error('Error removing from cart:', error);
+          this.setProcessingItem(productId, false);
+        },
+      });
     } else {
-      this.cartService.updateItem(productId, quantity).subscribe();
+      this.cartService.updateItem(productId, quantity).subscribe({
+        next: () => {
+          this.setProcessingItem(productId, false);
+        },
+        error: (error) => {
+          console.error('Error updating cart:', error);
+          this.setProcessingItem(productId, false);
+        },
+      });
     }
   }
 

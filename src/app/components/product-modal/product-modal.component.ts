@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../common/services/modal.service';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
@@ -20,6 +20,11 @@ export class ProductModalComponent {
   isOpen = this.modalService.isOpen;
   selectedProduct = this.modalService.selectedProduct;
 
+  private isProcessingSignal = signal(false);
+
+  isProcessing = this.isProcessingSignal.asReadonly();
+  cartService_public = this.cartService; // Expose for template
+
   closeModal(): void {
     this.modalService.closeModal();
   }
@@ -28,21 +33,93 @@ export class ProductModalComponent {
     return this.cartService.isInCart(productId);
   }
 
+  getCartItemCount(productId: string): number {
+    return this.cartService.getCartItemCount(productId);
+  }
+
   toggleCart(product: Product): void {
+    if (this.isProcessingSignal()) {
+      return;
+    }
+
+    this.isProcessingSignal.set(true);
+
     if (this.isInCart(product.id)) {
-      this.cartService.removeItem(product.id).subscribe(() => {
-        this.cartService.getCart().subscribe(); // refresh cache
+      this.cartService.removeItem(product.id).subscribe({
+        next: () => {
+          this.isProcessingSignal.set(false);
+        },
+        error: (err) => {
+          console.error('Error removing from cart:', err);
+          this.isProcessingSignal.set(false);
+        },
       });
     } else {
-      this.cartService.addToCart(product.id).subscribe(() => {
-        this.cartService.getCart().subscribe(); // refresh cache
+      this.cartService.addToCart(product.id).subscribe({
+        next: () => {
+          this.isProcessingSignal.set(false);
+        },
+        error: (err) => {
+          console.error('Error adding to cart:', err);
+          this.isProcessingSignal.set(false);
+        },
+      });
+    }
+  }
+
+  updateCartQuantity(product: Product, newQuantity: number): void {
+    if (this.isProcessingSignal()) {
+      return;
+    }
+
+    this.isProcessingSignal.set(true);
+
+    if (newQuantity <= 0) {
+      this.cartService.removeItem(product.id).subscribe({
+        next: () => {
+          this.isProcessingSignal.set(false);
+        },
+        error: (err) => {
+          console.error('Error removing from cart:', err);
+          this.isProcessingSignal.set(false);
+        },
+      });
+    } else {
+      this.cartService.updateItem(product.id, newQuantity).subscribe({
+        next: () => {
+          this.isProcessingSignal.set(false);
+        },
+        error: (err) => {
+          console.error('Error updating cart:', err);
+          this.isProcessingSignal.set(false);
+        },
       });
     }
   }
 
   getCartButtonClass(product: Product): string {
+    const baseClass =
+      'w-full font-medium rounded-lg transition-all duration-200';
+
+    if (this.isProcessingSignal()) {
+      return `${baseClass} bg-gray-400 text-gray-600 cursor-not-allowed`;
+    }
+
     return this.isInCart(product.id)
-      ? 'w-full bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-all duration-200'
-      : 'w-full bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-all duration-200';
+      ? `${baseClass} bg-red-500 hover:bg-red-600 text-white`
+      : `${baseClass} bg-primary-600 hover:bg-primary-700 text-white`;
+  }
+
+  getCartButtonText(product: Product): string {
+    if (this.isProcessingSignal()) {
+      return this.isInCart(product.id) ? 'Removing...' : 'Adding...';
+    }
+    return this.isInCart(product.id) ? 'Remove from Cart' : 'Add to Cart';
+  }
+
+  getCartButtonIcon(product: Product): string {
+    return this.isInCart(product.id)
+      ? 'assets/icons/trash.svg'
+      : 'assets/icons/shopping-cart.svg';
   }
 }

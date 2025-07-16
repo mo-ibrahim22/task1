@@ -8,7 +8,35 @@
             <!-- Header -->
             <div class="flex justify-between items-start mb-6">
                 <h2 class="text-xl md:text-2xl font-bold text-primary-900 pr-4">{{ product.title }}</h2>
+                <button (click)="closeModal()" class="text-primary-400 hover:text-primary-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
+
+            <!-- Error Display -->
+            @if (cartService_public.error()) {
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-700 font-medium">{{ cartService_public.error() }}</span>
+                    </div>
+                    <button (click)="cartService_public.clearError()" class="text-red-500 hover:text-red-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            }
 
             <!-- Content -->
             <div class="grid md:grid-cols-2 gap-6">
@@ -39,11 +67,33 @@
 
                     <p class="text-primary-700 leading-relaxed">{{ product.description }}</p>
 
+                    <!-- Quantity Controls (if item is in cart) -->
+                    @if (isInCart(product.id)) {
+                    <div class="bg-primary-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-primary-700 font-medium">In Cart:</span>
+                            <div class="flex items-center gap-3">
+                                <app-button iconSrc="assets/icons/minus.svg" iconPosition="center" [shape]="'circle'"
+                                    customClass="bg-primary-200 hover:bg-primary-300" [disabled]="isProcessing()"
+                                    (clicked)="updateCartQuantity(product, getCartItemCount(product.id) - 1)">
+                                </app-button>
+
+                                <span class="font-bold text-lg w-8 text-center">{{ getCartItemCount(product.id)
+                                    }}</span>
+
+                                <app-button iconSrc="assets/icons/plus.svg" iconPosition="center" [shape]="'circle'"
+                                    customClass="bg-primary-200 hover:bg-primary-300" [disabled]="isProcessing()"
+                                    (clicked)="updateCartQuantity(product, getCartItemCount(product.id) + 1)">
+                                </app-button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
                     <div class="pt-4">
-                        <app-button [text]="isInCart(product.id) ? 'Remove from Cart' : 'Add to Cart'"
-                            [iconSrc]="isInCart(product.id) ? 'assets/icons/trash.svg' : 'assets/icons/shopping-cart.svg'"
+                        <app-button [text]="getCartButtonText(product)" [iconSrc]="getCartButtonIcon(product)"
                             iconPosition="left" size="lg" [customClass]="getCartButtonClass(product)"
-                            (clicked)="toggleCart(product)">
+                            [disabled]="isProcessing()" [loading]="isProcessing()" (clicked)="toggleCart(product)">
                         </app-button>
                     </div>
                 </div>

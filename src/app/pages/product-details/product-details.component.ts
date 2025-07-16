@@ -23,6 +23,10 @@ export class ProductDetailsComponent implements OnInit {
   isLoading = signal(true);
   selectedImageIndex = signal(0);
   error = signal<string | null>(null);
+  isProcessingCart = signal(false);
+
+  // Expose cart service for template
+  cartService_public = this.cartService;
 
   constructor() {
     // React to route parameter changes
@@ -47,7 +51,7 @@ export class ProductDetailsComponent implements OnInit {
   private loadProduct(id: string): void {
     this.isLoading.set(true);
     this.error.set(null);
-    
+
     this.productsService.getProductById(id).subscribe({
       next: (response) => {
         if (response && response.data) {
@@ -75,30 +79,76 @@ export class ProductDetailsComponent implements OnInit {
 
   isInCart(): boolean {
     const currentProduct = this.product();
-    return currentProduct ? this.cartService.isInCart(currentProduct.id) : false;
+    return currentProduct
+      ? this.cartService.isInCart(currentProduct.id)
+      : false;
+  }
+
+  getCartItemCount(): number {
+    const currentProduct = this.product();
+    return currentProduct
+      ? this.cartService.getCartItemCount(currentProduct.id)
+      : 0;
   }
 
   toggleCart(): void {
     const currentProduct = this.product();
-    if (!currentProduct) return;
+    if (!currentProduct || this.isProcessingCart()) {
+      return;
+    }
+
+    this.isProcessingCart.set(true);
 
     if (this.isInCart()) {
       this.cartService.removeItem(currentProduct.id).subscribe({
         next: () => {
-          // Cart will be updated automatically via signals
+          this.isProcessingCart.set(false);
         },
         error: (err) => {
           console.error('Error removing from cart:', err);
-        }
+          this.isProcessingCart.set(false);
+        },
       });
     } else {
       this.cartService.addToCart(currentProduct.id).subscribe({
         next: () => {
-          // Cart will be updated automatically via signals
+          this.isProcessingCart.set(false);
         },
         error: (err) => {
           console.error('Error adding to cart:', err);
-        }
+          this.isProcessingCart.set(false);
+        },
+      });
+    }
+  }
+
+  updateCartQuantity(newQuantity: number): void {
+    const currentProduct = this.product();
+    if (!currentProduct || this.isProcessingCart()) {
+      return;
+    }
+
+    this.isProcessingCart.set(true);
+
+    if (newQuantity <= 0) {
+      this.cartService.removeItem(currentProduct.id).subscribe({
+        next: () => {
+          this.isProcessingCart.set(false);
+        },
+        error: (err) => {
+          console.error('Error removing from cart:', err);
+          this.isProcessingCart.set(false);
+        },
+      });
+    } else {
+      this.cartService.updateItem(currentProduct.id, newQuantity).subscribe({
+        next: () => {
+          this.isProcessingCart.set(false);
+        },
+        error: (err) => {
+          console.error('Error updating cart:', err);
+          this.isProcessingCart.set(false);
+        },
       });
     }
   }
@@ -108,24 +158,40 @@ export class ProductDetailsComponent implements OnInit {
   }
 
   get cartButtonClass(): string {
+    const baseClass =
+      'w-full font-semibold py-4 rounded-xl transition-all duration-200';
+
+    if (this.isProcessingCart()) {
+      return `${baseClass} bg-gray-400 text-gray-600 cursor-not-allowed`;
+    }
+
     return this.isInCart()
-      ? 'bg-red-500 hover:bg-red-600 text-white'
-      : 'bg-primary-600 hover:bg-primary-700 text-white';
+      ? `${baseClass} bg-red-500 hover:bg-red-600 text-white`
+      : `${baseClass} bg-primary-600 hover:bg-primary-700 text-white`;
   }
 
   get cartButtonText(): string {
+    if (this.isProcessingCart()) {
+      return this.isInCart() ? 'Removing...' : 'Adding...';
+    }
     return this.isInCart() ? 'Remove from Cart' : 'Add to Cart';
+  }
+
+  get cartButtonIcon(): string {
+    return this.isInCart()
+      ? 'assets/icons/trash.svg'
+      : 'assets/icons/shopping-cart.svg';
   }
 
   get currentImage(): string {
     const currentProduct = this.product();
     if (!currentProduct) return '';
-    
+
     if (currentProduct.images && currentProduct.images.length > 0) {
       const index = this.selectedImageIndex();
       return currentProduct.images[index] || currentProduct.imageCover;
     }
-    
+
     return currentProduct.imageCover;
   }
 

@@ -12,6 +12,27 @@
     <div class="p-4">
       <h3 class="text-lg font-semibold text-primary-900 mb-4">Shopping Cart</h3>
 
+      <!-- Error Display -->
+      @if (cartService.error()) {
+      <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg class="h-4 w-4 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            <span class="text-red-700 text-sm font-medium">{{ cartService.error() }}</span>
+          </div>
+          <button (click)="cartService.clearError()" class="text-red-500 hover:text-red-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      }
+
       @if (cart(); as cartResponse) {
       @if (cartResponse.numOfCartItems === 0) {
       <div class="text-center py-8 text-primary-600">
@@ -21,7 +42,8 @@
       <div class="space-y-4">
         <!-- Items -->
         @for (item of cartResponse.data.products; track item._id) {
-        <div class="flex items-center gap-3 p-3 bg-primary-50 rounded-lg">
+        <div class="flex items-center gap-3 p-3 bg-primary-50 rounded-lg"
+          [class.opacity-50]="isProcessingItem(item.product.id)">
           <img [src]="item.product.imageCover" [alt]="item.product.title" class="w-12 h-12 object-cover rounded" />
 
           <div class="flex-1 min-w-0">
@@ -37,7 +59,7 @@
           <div class="flex items-center gap-2">
             <!-- Decrease -->
             <app-button iconSrc="assets/icons/minus.svg" iconPosition="center" [shape]="'circle'"
-              customClass="bg-primary-200 hover:bg-primary-300 text-sm"
+              customClass="bg-primary-200 hover:bg-primary-300 text-sm" [disabled]="isProcessingItem(item.product.id)"
               (clicked)="updateQuantity(item.product.id, item.count - 1)">
             </app-button>
 
@@ -47,14 +69,14 @@
 
             <!-- Increase -->
             <app-button iconSrc="assets/icons/plus.svg" iconPosition="center" [shape]="'circle'"
-              customClass="bg-primary-200 hover:bg-primary-300 text-sm"
+              customClass="bg-primary-200 hover:bg-primary-300 text-sm" [disabled]="isProcessingItem(item.product.id)"
               (clicked)="updateQuantity(item.product.id, item.count + 1)">
             </app-button>
 
             <!-- Trash -->
             <app-button iconSrc="assets/icons/trash.svg" iconPosition="center" [shape]="'circle'"
               customClass="ml-2 bg-primary-200 text-red-500 hover:text-red-700"
-              (clicked)="removeFromCart(item.product.id)">
+              [disabled]="isProcessingItem(item.product.id)" (clicked)="removeFromCart(item.product.id)">
             </app-button>
           </div>
         </div>
@@ -70,11 +92,20 @@
           </div>
 
           <app-button text="Checkout"
-            customClass="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+            customClass="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+            [disabled]="cartService.isLoading()">
           </app-button>
         </div>
       </div>
       }
+      } @else {
+      <div class="text-center py-8 text-primary-600">
+        @if (cartService.isLoading()) {
+        Loading cart...
+        } @else {
+        Failed to load cart
+        }
+      </div>
       }
     </div>
   </div>
