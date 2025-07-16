@@ -1,16 +1,43 @@
 import { Routes } from '@angular/router';
 import { ShopComponent } from './pages/shop/shop.component';
-import { SignupComponent } from './pages/auth/signup/signup.component';
-import { SigninComponent } from './pages/auth/signin/signin.component';
-import { ProductDetailsComponent } from './pages/product-details/product-details.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { authGuard } from './common/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/shop', pathMatch: 'full' },
+
+  // Eagerly loaded
   { path: 'shop', component: ShopComponent },
-  { path: 'product/:id', component: ProductDetailsComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'signin', component: SigninComponent },
+
+  // Lazy-loaded with route guards
+  {
+    path: 'product/:id',
+    loadComponent: () =>
+      import('./pages/product-details/product-details.component').then(
+        (m) => m.ProductDetailsComponent
+      ),
+  },
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/profile/profile.component').then(
+        (m) => m.ProfileComponent
+      ),
+  },
+  {
+    path: 'signup',
+    loadComponent: () =>
+      import('./pages/auth/signup/signup.component').then(
+        (m) => m.SignupComponent
+      ),
+  },
+  {
+    path: 'signin',
+    loadComponent: () =>
+      import('./pages/auth/signin/signin.component').then(
+        (m) => m.SigninComponent
+      ),
+  },
+
   { path: '**', redirectTo: '/shop' },
 ];
