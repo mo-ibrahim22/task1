@@ -1,6 +1,14 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap, catchError, throwError, EMPTY, of } from 'rxjs';
+import {
+  Observable,
+  tap,
+  catchError,
+  throwError,
+  EMPTY,
+  of,
+  switchMap,
+} from 'rxjs';
 import {
   CartResponse,
   AddToCartRequest,
@@ -99,6 +107,12 @@ export class CartService {
         headers: this.getHeaders(),
       })
       .pipe(
+        switchMap((response) => {
+          // After adding, immediately fetch the full cart details
+          return this.http.get<CartResponse>(`${this.apiUrl}/api/v1/cart`, {
+            headers: this.getHeaders(),
+          });
+        }),
         tap((cart) => {
           this.cartSignal.set(cart);
           this.isLoadingSignal.set(false);
@@ -106,7 +120,6 @@ export class CartService {
         catchError(this.handleError('Add to cart'))
       );
   }
-
   updateItem(productId: string, count: number): Observable<CartResponse> {
     if (!this.requireAuth()) {
       return EMPTY;
