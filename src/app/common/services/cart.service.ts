@@ -17,12 +17,14 @@ import {
 import { environment } from '../../../environment/environment';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { ToasterService } from './toaster.service';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toasterService = inject(ToasterService);
   private apiUrl = environment.apiUrl;
 
   private cartSignal = signal<CartResponse | null>(null);
@@ -38,6 +40,10 @@ export class CartService {
   private requireAuth(): boolean {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/signin']);
+      this.toasterService.warning(
+        'Authentication Required',
+        'Please sign in to manage your cart'
+      );
       return false;
     }
     return true;
@@ -64,6 +70,7 @@ export class CartService {
       }
 
       this.errorSignal.set(errorMessage);
+      this.toasterService.error('Cart Error', errorMessage);
 
       // Clear error after 5 seconds
       setTimeout(() => this.errorSignal.set(null), 5000);
@@ -116,6 +123,10 @@ export class CartService {
         tap((cart) => {
           this.cartSignal.set(cart);
           this.isLoadingSignal.set(false);
+          this.toasterService.success(
+            'Added to Cart',
+            'Product has been added to your cart'
+          );
         }),
         catchError(this.handleError('Add to cart'))
       );
@@ -141,6 +152,10 @@ export class CartService {
         tap((cart) => {
           this.cartSignal.set(cart);
           this.isLoadingSignal.set(false);
+          this.toasterService.info(
+            'Cart Updated',
+            'Item quantity has been updated'
+          );
         }),
         catchError(this.handleError('Update cart item'))
       );
@@ -151,6 +166,31 @@ export class CartService {
       return EMPTY;
     }
 
+    // Get product name for confirmation
+    const cart = this.cartSignal();
+    const cartItem = cart?.data?.products.find(
+      (item) => item.product.id === productId || item.product._id === productId
+    );
+    const productName = cartItem?.product.title || 'this item';
+
+    // Show confirmation before removing
+    this.toasterService.confirm(
+      'Remove from Cart',
+      `Are you sure you want to remove "${productName}" from your cart?`,
+      () => {
+        this.performRemoveItem(productId).subscribe();
+      },
+      {
+        confirmText: 'Yes, Remove',
+        cancelText: 'Cancel',
+        type: 'warning',
+      }
+    );
+
+    return EMPTY;
+  }
+
+  private performRemoveItem(productId: string): Observable<CartResponse> {
     this.isLoadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -162,6 +202,10 @@ export class CartService {
         tap((cart) => {
           this.cartSignal.set(cart);
           this.isLoadingSignal.set(false);
+          this.toasterService.success(
+            'Removed from Cart',
+            'Product has been removed from your cart'
+          );
         }),
         catchError(this.handleError('Remove cart item'))
       );
@@ -172,6 +216,24 @@ export class CartService {
       return EMPTY;
     }
 
+    // Show confirmation before clearing
+    this.toasterService.confirm(
+      'Clear Cart',
+      'Are you sure you want to remove all items from your cart?',
+      () => {
+        this.performClearCart().subscribe();
+      },
+      {
+        confirmText: 'Yes, Clear Cart',
+        cancelText: 'Cancel',
+        type: 'danger',
+      }
+    );
+
+    return EMPTY;
+  }
+
+  private performClearCart(): Observable<any> {
     this.isLoadingSignal.set(true);
     this.errorSignal.set(null);
 
@@ -183,6 +245,10 @@ export class CartService {
         tap(() => {
           this.cartSignal.set(null);
           this.isLoadingSignal.set(false);
+          this.toasterService.success(
+            'Cart Cleared',
+            'All items have been removed from your cart'
+          );
         }),
         catchError(this.handleError('Clear cart'))
       );

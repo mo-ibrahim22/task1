@@ -46,21 +46,8 @@ export class CartDropdownComponent implements OnInit {
   }
 
   removeFromCart(productId: string): void {
-    if (this.isProcessingItem(productId)) {
-      return;
-    }
-
-    this.setProcessingItem(productId, true);
-
-    this.cartService.removeItem(productId).subscribe({
-      next: () => {
-        this.setProcessingItem(productId, false);
-      },
-      error: (error) => {
-        console.error('Error removing from cart:', error);
-        this.setProcessingItem(productId, false);
-      },
-    });
+    // removeItem now shows confirmation dialog
+    this.cartService.removeItem(productId);
   }
 
   updateQuantity(productId: string, quantity: number): void {
@@ -71,15 +58,9 @@ export class CartDropdownComponent implements OnInit {
     this.setProcessingItem(productId, true);
 
     if (quantity <= 0) {
-      this.cartService.removeItem(productId).subscribe({
-        next: () => {
-          this.setProcessingItem(productId, false);
-        },
-        error: (error) => {
-          console.error('Error removing from cart:', error);
-          this.setProcessingItem(productId, false);
-        },
-      });
+      // When quantity reaches 0, show confirmation before removing
+      this.setProcessingItem(productId, false); // Reset processing state
+      this.cartService.removeItem(productId);
     } else {
       this.cartService.updateItem(productId, quantity).subscribe({
         next: () => {

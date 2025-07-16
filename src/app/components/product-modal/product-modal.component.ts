@@ -42,19 +42,11 @@ export class ProductModalComponent {
       return;
     }
 
-    this.isProcessingSignal.set(true);
-
     if (this.isInCart(product.id)) {
-      this.cartService.removeItem(product.id).subscribe({
-        next: () => {
-          this.isProcessingSignal.set(false);
-        },
-        error: (err) => {
-          console.error('Error removing from cart:', err);
-          this.isProcessingSignal.set(false);
-        },
-      });
+      // removeItem now shows confirmation dialog
+      this.cartService.removeItem(product.id);
     } else {
+      this.isProcessingSignal.set(true);
       this.cartService.addToCart(product.id).subscribe({
         next: () => {
           this.isProcessingSignal.set(false);
@@ -72,19 +64,11 @@ export class ProductModalComponent {
       return;
     }
 
-    this.isProcessingSignal.set(true);
-
     if (newQuantity <= 0) {
-      this.cartService.removeItem(product.id).subscribe({
-        next: () => {
-          this.isProcessingSignal.set(false);
-        },
-        error: (err) => {
-          console.error('Error removing from cart:', err);
-          this.isProcessingSignal.set(false);
-        },
-      });
+      // When quantity reaches 0, show confirmation before removing
+      this.cartService.removeItem(product.id);
     } else {
+      this.isProcessingSignal.set(true);
       this.cartService.updateItem(product.id, newQuantity).subscribe({
         next: () => {
           this.isProcessingSignal.set(false);

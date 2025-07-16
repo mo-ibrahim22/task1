@@ -1,1 +1,93 @@
-<p>layout works!</p>
+<!-- Toast Container -->
+<div class="fixed top-4 right-4 z-50 space-y-3 max-w-sm">
+    @for (toast of toasts(); track toast.id) {
+    <ng-container [ngTemplateOutlet]="toastTemplate" [ngTemplateOutletContext]="{ $implicit: toast }"></ng-container>
+    }
+
+    @if (toasts().length > 1) {
+    <div class="flex justify-end">
+        <app-button text="Clear All" size="xs" customClass="bg-gray-600 hover:bg-gray-700 text-white text-xs"
+            (clicked)="clearAllToasts()">
+        </app-button>
+    </div>
+    }
+</div>
+
+<!-- Confirmation Dialog -->
+@if (confirmation(); as dialog) {
+<ng-container [ngTemplateOutlet]="confirmationTemplate"
+    [ngTemplateOutletContext]="{ $implicit: dialog }"></ng-container>
+}
+
+<!-- Toast Template -->
+<ng-template #toastTemplate let-toast>
+    <div [class]="getToastClasses(toast.type)" style="animation: slideInRight 0.3s ease-out;">
+
+        <!-- Icon -->
+        <div class="flex-shrink-0">
+            <img [src]="getToastIcon(toast.type)" [alt]="toast.type" class="w-5 h-5" />
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1 min-w-0">
+            <h4 class="font-semibold text-sm mb-1">{{ toast.title }}</h4>
+            <p class="text-sm opacity-90">{{ toast.message }}</p>
+        </div>
+
+        <!-- Close Button -->
+        <button (click)="removeToast(toast.id)" class="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+</ng-template>
+
+<!-- Confirmation Dialog Template -->
+<ng-template #confirmationTemplate let-dialog>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div class="bg-white rounded-xl max-w-md w-full shadow-2xl transform transition-all duration-300"
+            style="animation: scaleIn 0.2s ease-out;">
+
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div [class]="'w-8 h-8 rounded-full flex items-center justify-center ' + 
+                       (dialog.type === 'danger' ? 'bg-red-100' : 
+                        dialog.type === 'warning' ? 'bg-yellow-100' : 'bg-blue-100')">
+                        <svg class="w-5 h-5" [class]="getConfirmationClasses(dialog.type)" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            @if (dialog.type === 'danger') {
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            } @else if (dialog.type === 'warning') {
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                            } @else {
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            }
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ dialog.title }}</h3>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+                <p class="text-gray-600 leading-relaxed">{{ dialog.message }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="p-6 border-t border-gray-200 flex gap-3 justify-end">
+                <app-button [text]="dialog.cancelText || 'Cancel'"
+                    customClass="border border-gray-300 text-gray-700 hover:bg-gray-50" (clicked)="handleCancel()">
+                </app-button>
+
+                <app-button [text]="dialog.confirmText || 'Confirm'"
+                    [customClass]="'font-medium ' + getConfirmButtonClasses(dialog.type)" (clicked)="handleConfirm()">
+                </app-button>
+            </div>
+        </div>
+    </div>
+</ng-template>

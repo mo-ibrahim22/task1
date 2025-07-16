@@ -97,19 +97,11 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
 
-    this.isProcessingCart.set(true);
-
     if (this.isInCart()) {
-      this.cartService.removeItem(currentProduct.id).subscribe({
-        next: () => {
-          this.isProcessingCart.set(false);
-        },
-        error: (err) => {
-          console.error('Error removing from cart:', err);
-          this.isProcessingCart.set(false);
-        },
-      });
+      // removeItem now shows confirmation dialog
+      this.cartService.removeItem(currentProduct.id);
     } else {
+      this.isProcessingCart.set(true);
       this.cartService.addToCart(currentProduct.id).subscribe({
         next: () => {
           this.isProcessingCart.set(false);
@@ -128,19 +120,11 @@ export class ProductDetailsComponent implements OnInit {
       return;
     }
 
-    this.isProcessingCart.set(true);
-
     if (newQuantity <= 0) {
-      this.cartService.removeItem(currentProduct.id).subscribe({
-        next: () => {
-          this.isProcessingCart.set(false);
-        },
-        error: (err) => {
-          console.error('Error removing from cart:', err);
-          this.isProcessingCart.set(false);
-        },
-      });
+      // When quantity reaches 0, show confirmation before removing
+      this.cartService.removeItem(currentProduct.id);
     } else {
+      this.isProcessingCart.set(true);
       this.cartService.updateItem(currentProduct.id, newQuantity).subscribe({
         next: () => {
           this.isProcessingCart.set(false);

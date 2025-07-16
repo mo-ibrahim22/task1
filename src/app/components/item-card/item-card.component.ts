@@ -48,19 +48,11 @@ export class ItemCardComponent {
       return; // Prevent multiple clicks
     }
 
-    this.isProcessingSignal.set(true);
-
     if (this.isInCart) {
-      this.cartService.removeItem(this.product().id).subscribe({
-        next: () => {
-          this.isProcessingSignal.set(false);
-        },
-        error: (error) => {
-          console.error('Error removing from cart:', error);
-          this.isProcessingSignal.set(false);
-        },
-      });
+      // removeItem now shows confirmation dialog, no need to handle loading state here
+      this.cartService.removeItem(this.product().id);
     } else {
+      this.isProcessingSignal.set(true);
       this.cartService.addToCart(this.product().id).subscribe({
         next: () => {
           this.isProcessingSignal.set(false);
