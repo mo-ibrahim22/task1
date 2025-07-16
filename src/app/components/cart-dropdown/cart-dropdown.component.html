@@ -1,27 +1,26 @@
 <div class="relative">
   <!-- Cart Button -->
-  <app-button iconSrc="assets/icons/cart.svg" iconPosition="center" [shape]="'circle'"
-    [badge]="(cartService.cart$ | async)?.numOfCartItems ?? 0"
+  <app-button iconSrc="assets/icons/cart.svg" iconPosition="center" [shape]="'circle'" [badge]="cartService.cartCount()"
     customClass="bg-primary hover:bg-primary-100 transition-colors" (clicked)="toggleDropdown()">
   </app-button>
 
   <!-- Dropdown -->
-  @if (isOpen) {
+  @if (isOpen()) {
   <div class="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-xl border border-primary-200 z-50"
     appClickOutside (clickOutside)="closeDropdown()">
 
     <div class="p-4">
       <h3 class="text-lg font-semibold text-primary-900 mb-4">Shopping Cart</h3>
 
-      @if (cartService.cart$ | async; as cart) {
-      @if (cart.numOfCartItems === 0) {
+      @if (cart(); as cartResponse) {
+      @if (cartResponse.numOfCartItems === 0) {
       <div class="text-center py-8 text-primary-600">
         Your cart is empty
       </div>
-      } @else {
+      } @else if (cartResponse.data) {
       <div class="space-y-4">
         <!-- Items -->
-        @for (item of cart.data.products; track item.product.id) {
+        @for (item of cartResponse.data.products; track item._id) {
         <div class="flex items-center gap-3 p-3 bg-primary-50 rounded-lg">
           <img [src]="item.product.imageCover" [alt]="item.product.title" class="w-12 h-12 object-cover rounded" />
 
@@ -29,7 +28,10 @@
             <h4 class="font-medium text-sm text-primary-900 truncate">
               {{ item.product.title }}
             </h4>
-            <p class="text-primary-600 text-sm">${{ item.price }}</p>
+            <p class="text-primary-600 text-sm">
+              ${{ (item.price * item.count).toFixed(2) }}
+              <span class="text-xs text-primary-400">(${{ item.price }} each)</span>
+            </p>
           </div>
 
           <div class="flex items-center gap-2">
@@ -63,7 +65,7 @@
           <div class="flex justify-between items-center mb-4">
             <span class="font-semibold text-primary-900">Total:</span>
             <span class="font-bold text-lg text-primary-900">
-              ${{ getTotalPrice().toFixed(2) }}
+              ${{ cartResponse.data.totalCartPrice.toFixed(2) }}
             </span>
           </div>
 

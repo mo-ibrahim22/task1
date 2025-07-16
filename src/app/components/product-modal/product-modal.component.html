@@ -1,9 +1,9 @@
-@if (isOpen$ | async; as isOpen) {
+@if (isOpen()) {
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/75 p-4">
     <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl" appClickOutside
         (clickOutside)="closeModal()">
 
-        @if (selectedProduct$ | async; as product) {
+        @if (selectedProduct(); as product) {
         <div class="p-6">
             <!-- Header -->
             <div class="flex justify-between items-start mb-6">

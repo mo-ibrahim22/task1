@@ -7,18 +7,18 @@
 
             <div
                 class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600">
-                <img [src]="member.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=48'"
-                    [alt]="member.name" class="h-12 w-12 rounded-full object-cover" />
+                <img [src]="member().avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=48'"
+                    [alt]="member().name" class="h-12 w-12 rounded-full object-cover" />
             </div>
 
             <div>
-                <h3 class="font-semibold text-primary-900">{{ member.name }}</h3>
-                <p class="text-sm text-primary-600">{{ member.role }}</p>
+                <h3 class="font-semibold text-primary-900">{{ member().name }}</h3>
+                <p class="text-sm text-primary-600">{{ member().role }}</p>
                 <span class="rounded-full px-2 py-1 text-xs border font-bold" [ngClass]="{
-            'bg-tertiary text-tertiary-400 border-tertiary-600': member.category === Category.SOFTWARE,
-            'bg-tertiary-200 text-tertiary-500 border-tertiary-700': member.category === Category.DESIGN
+            'bg-tertiary text-tertiary-400 border-tertiary-600': member().category === Category.SOFTWARE,
+            'bg-tertiary-200 text-tertiary-500 border-tertiary-700': member().category === Category.DESIGN
           }">
-                    {{ member.category }}
+                    {{ member().category }}
                 </span>
             </div>
         </div>
@@ -31,12 +31,12 @@
     </div>
 
     <p class="mb-4 line-clamp-2 text-sm text-primary-700">
-        {{ member.description }}
+        {{ member().description }}
     </p>
 
     <div class="flex w-full items-stretch gap-2">
         <app-button class="flex-1" [text]="contactButtonText" [customClass]="contactButtonClass"
-            (clicked)="toggleContactStatus(member)">
+            (clicked)="toggleContactStatus()">
         </app-button>
 
         <app-button class="w-12 flex-shrink-0" iconSrc="assets/icons/user.svg" iconPosition="center"
@@ -45,9 +45,9 @@
     </div>
 
     <span class="rounded-sm px-2 py-1 text-xs font-medium absolute end-0 top-12 " [ngClass]="{
-          'bg-secondary-100 text-secondary-800': member.status === Status.CONTACTED,
-          'bg-primary-200 text-primary-800': member.status === Status.NOT_CONTACTED
+          'bg-secondary-100 text-secondary-800': currentStatus === Status.CONTACTED,
+          'bg-primary-200 text-primary-800': currentStatus === Status.NOT_CONTACTED
         }">
-        {{ member.status }}
+        {{ currentStatus }}
     </span>
 </div>

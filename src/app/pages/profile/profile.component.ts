@@ -15,7 +15,7 @@ export class ProfileComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  user$ = this.authService.user$;
+  user = this.authService.user;
 
   ngOnInit(): void {
     // Redirect to login if not authenticated

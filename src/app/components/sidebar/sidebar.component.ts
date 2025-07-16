@@ -14,8 +14,8 @@ import { ButtonComponent } from '../button/button.component';
 export class SidebarComponent {
   private layoutService = inject(LayoutService);
 
-  isMobile$ = this.layoutService.isMobile$;
-  sidebarOpen$ = this.layoutService.sidebarOpen$;
+  isMobile = this.layoutService.isMobile;
+  sidebarOpen = this.layoutService.sidebarOpen;
 
   menuItems = [
     {

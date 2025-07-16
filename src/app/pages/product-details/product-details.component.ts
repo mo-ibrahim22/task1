@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductsService } from '../../common/services/products.service';
@@ -19,50 +19,86 @@ export class ProductDetailsComponent implements OnInit {
   private readonly productsService = inject(ProductsService);
   private readonly cartService = inject(CartService);
 
-  product: Product | null = null;
-  isLoading = true;
-  selectedImageIndex = 0;
+  product = signal<Product | null>(null);
+  isLoading = signal(true);
+  selectedImageIndex = signal(0);
+  error = signal<string | null>(null);
+
+  constructor() {
+    // React to route parameter changes
+    effect(() => {
+      const productId = this.route.snapshot.paramMap.get('id');
+      if (productId) {
+        this.loadProduct(productId);
+      }
+    });
+  }
 
   ngOnInit(): void {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) {
       this.loadProduct(productId);
+    } else {
+      this.error.set('No product ID provided');
+      this.isLoading.set(false);
     }
   }
 
   private loadProduct(id: string): void {
-    this.isLoading = true;
+    this.isLoading.set(true);
+    this.error.set(null);
+    
     this.productsService.getProductById(id).subscribe({
       next: (response) => {
-        this.product = response.data;
-        this.isLoading = false;
+        if (response && response.data) {
+          this.product.set(response.data);
+          this.selectedImageIndex.set(0); // Reset image selection
+        } else {
+          this.error.set('Product data not found');
+        }
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error loading product:', err);
-        this.isLoading = false;
-        this.router.navigate(['/shop']);
+        this.error.set('Failed to load product. Please try again.');
+        this.isLoading.set(false);
       },
     });
   }
 
   selectImage(index: number): void {
-    this.selectedImageIndex = index;
+    const currentProduct = this.product();
+    if (currentProduct && index >= 0 && index < currentProduct.images.length) {
+      this.selectedImageIndex.set(index);
+    }
   }
 
   isInCart(): boolean {
-    return this.product ? this.cartService.isInCart(this.product.id) : false;
+    const currentProduct = this.product();
+    return currentProduct ? this.cartService.isInCart(currentProduct.id) : false;
   }
 
   toggleCart(): void {
-    if (!this.product) return;
+    const currentProduct = this.product();
+    if (!currentProduct) return;
 
     if (this.isInCart()) {
-      this.cartService.removeItem(this.product.id).subscribe(() => {
-        this.cartService.getCart().subscribe(); // refresh local cache
+      this.cartService.removeItem(currentProduct.id).subscribe({
+        next: () => {
+          // Cart will be updated automatically via signals
+        },
+        error: (err) => {
+          console.error('Error removing from cart:', err);
+        }
       });
     } else {
-      this.cartService.addToCart(this.product.id).subscribe(() => {
-        this.cartService.getCart().subscribe(); // refresh local cache
+      this.cartService.addToCart(currentProduct.id).subscribe({
+        next: () => {
+          // Cart will be updated automatically via signals
+        },
+        error: (err) => {
+          console.error('Error adding to cart:', err);
+        }
       });
     }
   }
@@ -79,5 +115,22 @@ export class ProductDetailsComponent implements OnInit {
 
   get cartButtonText(): string {
     return this.isInCart() ? 'Remove from Cart' : 'Add to Cart';
+  }
+
+  get currentImage(): string {
+    const currentProduct = this.product();
+    if (!currentProduct) return '';
+    
+    if (currentProduct.images && currentProduct.images.length > 0) {
+      const index = this.selectedImageIndex();
+      return currentProduct.images[index] || currentProduct.imageCover;
+    }
+    
+    return currentProduct.imageCover;
+  }
+
+  get hasMultipleImages(): boolean {
+    const currentProduct = this.product();
+    return currentProduct ? (currentProduct.images?.length || 0) > 1 : false;
   }
 }

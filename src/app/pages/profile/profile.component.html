@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-primary-50 pt-20">
-    @if (user$ | async; as user) {
+    @if (user(); as user) {
     <div class="max-w-4xl mx-auto px-4 py-8">
         <!-- Back Button -->
         <app-button text="← Back to Shop" customClass="mb-6 text-primary-600 hover:text-primary-800 font-medium"

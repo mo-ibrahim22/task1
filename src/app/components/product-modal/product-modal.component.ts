@@ -17,8 +17,8 @@ export class ProductModalComponent {
   private readonly modalService = inject(ModalService);
   private readonly cartService = inject(CartService);
 
-  isOpen$ = this.modalService.isOpen$;
-  selectedProduct$ = this.modalService.selectedProduct$;
+  isOpen = this.modalService.isOpen;
+  selectedProduct = this.modalService.selectedProduct;
 
   closeModal(): void {
     this.modalService.closeModal();

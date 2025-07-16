@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../common/services/cart.service';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
@@ -13,9 +13,9 @@ import { ButtonComponent } from '../button/button.component';
 })
 export class CartDropdownComponent implements OnInit {
   cartService = inject(CartService);
-  cart$ = this.cartService.cart$;
+  cart = this.cartService.cart;
 
-  isOpen = false;
+  isOpen = signal(false);
 
   ngOnInit(): void {
     // Load cart when the component initializes
@@ -23,11 +23,11 @@ export class CartDropdownComponent implements OnInit {
   }
 
   toggleDropdown(): void {
-    this.isOpen = !this.isOpen;
+    this.isOpen.set(!this.isOpen());
   }
 
   closeDropdown(): void {
-    this.isOpen = false;
+    this.isOpen.set(false);
   }
 
   removeFromCart(productId: string): void {
@@ -43,8 +43,6 @@ export class CartDropdownComponent implements OnInit {
   }
 
   getTotalPrice(): number {
-    return this.cartService.getTotalPrice();
+    return this.cartService.totalPrice();
   }
-
-  
 }

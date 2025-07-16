@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Member } from '../../common/models/member.model';
 import { Category } from '../../common/enums/category.enum';
@@ -12,24 +12,32 @@ import { ButtonComponent } from '../button/button.component';
   styleUrl: './member-card.component.css',
 })
 export class MemberCardComponent {
-  @Input() member!: Member;
+  member = input.required<Member>();
   Category = Category;
   Status = Status;
 
-  toggleContactStatus(member: Member) {
-    member.status =
-      member.status === Status.CONTACTED
+  private memberStatus = signal<Status>(this.member().status);
+
+  toggleContactStatus() {
+    const currentStatus = this.memberStatus();
+    this.memberStatus.set(
+      currentStatus === Status.CONTACTED
         ? Status.NOT_CONTACTED
-        : Status.CONTACTED;
+        : Status.CONTACTED
+    );
   }
 
   get contactButtonClass(): string {
-    return this.member.status === Status.CONTACTED
+    return this.memberStatus() === Status.CONTACTED
       ? 'w-full h-full bg-secondary-500 text-primary-50 hover:bg-secondary-600'
       : 'w-full h-full bg-primary-500 text-primary-800 hover:bg-secondary-200';
   }
 
   get contactButtonText(): string {
-    return this.member.status === Status.CONTACTED ? 'Contacted' : 'Contact';
+    return this.memberStatus() === Status.CONTACTED ? 'Contacted' : 'Contact';
+  }
+
+  get currentStatus(): Status {
+    return this.memberStatus();
   }
 }

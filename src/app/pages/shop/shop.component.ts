@@ -1,6 +1,4 @@
-// features/shop/shop.component.ts
-
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemCardComponent } from '../../components/item-card/item-card.component';
 import { Product, ProductsResponse } from '../../common/models/product.model';
@@ -19,41 +17,47 @@ export class ShopComponent implements OnInit {
   private productsService = inject(ProductsService);
   private filterService = inject(FilterService);
 
-  isloading = false;
-  products: Product[] = [];
-  allProducts: Product[] = [];
+  isloading = signal(false);
+  products = signal<Product[]>([]);
+  allProducts = signal<Product[]>([]);
+
+  constructor() {
+    // React to search term changes
+    effect(() => {
+      const searchTerm = this.filterService.searchTerm();
+      this.filterProducts(searchTerm);
+    });
+  }
 
   ngOnInit(): void {
     this.getProducts();
-    this.filterService.searchTerm$.subscribe((term) => {
-      this.filterProducts(term);
-    });
   }
 
   private filterProducts(term: string) {
     if (!term) {
-      this.products = [...this.allProducts];
+      this.products.set([...this.allProducts()]);
       return;
     }
 
     const lowerTerm = term.toLowerCase();
-    this.products = this.allProducts.filter((product) =>
+    const filtered = this.allProducts().filter((product) =>
       product.title.toLowerCase().includes(lowerTerm)
     );
+    this.products.set(filtered);
   }
 
   private getProducts() {
-    this.isloading = true;
+    this.isloading.set(true);
     this.productsService.getProducts().subscribe({
       next: (response: ProductsResponse) => {
-        this.allProducts = response.data;
-        this.products = [...this.allProducts];
-        this.isloading = false;
+        this.allProducts.set(response.data);
+        this.products.set([...response.data]);
+        this.isloading.set(false);
       },
       error: (err) => {
         console.error('Error fetching products:', err);
-        this.isloading = false;
-        this.products = [];
+        this.isloading.set(false);
+        this.products.set([]);
       },
     });
   }

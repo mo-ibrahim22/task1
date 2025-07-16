@@ -1,32 +1,23 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 import { Product } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
-  private isOpenSubject = new BehaviorSubject<boolean>(false);
-  private selectedProductSubject = new BehaviorSubject<Product | null>(null);
+  private isOpenSignal = signal<boolean>(false);
+  private selectedProductSignal = signal<Product | null>(null);
 
-  public isOpen$ = this.isOpenSubject.asObservable();
-  public selectedProduct$ = this.selectedProductSubject.asObservable();
+  isOpen = this.isOpenSignal.asReadonly();
+  selectedProduct = this.selectedProductSignal.asReadonly();
 
   openModal(product: Product): void {
-    this.selectedProductSubject.next(product);
-    this.isOpenSubject.next(true);
+    this.selectedProductSignal.set(product);
+    this.isOpenSignal.set(true);
   }
 
   closeModal(): void {
-    this.isOpenSubject.next(false);
-    this.selectedProductSubject.next(null);
-  }
-
-  get isOpen(): boolean {
-    return this.isOpenSubject.value;
-  }
-
-  get selectedProduct(): Product | null {
-    return this.selectedProductSubject.value;
+    this.isOpenSignal.set(false);
+    this.selectedProductSignal.set(null);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { Product } from '../../common/models/product.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -18,25 +18,25 @@ export class ItemCardComponent {
   private readonly cartService = inject(CartService);
   private readonly router = inject(Router);
 
-  @Input() product!: Product;
-  @Input() first!: boolean;
-  @Input() last!: boolean;
+  product = input.required<Product>();
+  first = input.required<boolean>();
+  last = input.required<boolean>();
 
   openModal(): void {
-    this.router.navigate(['/product', this.product.id]);
+    this.router.navigate(['/product', this.product().id]);
   }
 
   get isInCart(): boolean {
-    return this.cartService.isInCart(this.product.id);
+    return this.cartService.isInCart(this.product().id);
   }
 
   toggleCart(): void {
     if (this.isInCart) {
-      this.cartService.removeItem(this.product.id).subscribe(() => {
+      this.cartService.removeItem(this.product().id).subscribe(() => {
         this.cartService.getCart().subscribe(); // refresh cache
       });
     } else {
-      this.cartService.addToCart(this.product.id).subscribe(() => {
+      this.cartService.addToCart(this.product().id).subscribe(() => {
         this.cartService.getCart().subscribe(); // refresh cache
       });
     }

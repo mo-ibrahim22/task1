@@ -11,16 +11,12 @@
         <option>Newest</option>
       </select>
 
-
-
       <select class="ps-3 py-2 bg-primary rounded-full text-sm font-medium">
         <option>Price</option>
         <option>Under $50</option>
         <option>$50 - $100</option>
         <option>Over $100</option>
       </select>
-
-
 
       <select class="ps-3 py-2  bg-primary rounded-full text-sm font-medium">
         <option>Size</option>
@@ -30,36 +26,24 @@
         <option>L</option>
         <option>XL</option>
       </select>
-
-
     </div>
   </div>
 
-
-
-
   <!-- Products Grid -->
-
-  @if (isloading) {
+  @if (isloading()) {
   <p>Loading products...</p>
   }
   @else {
   <section class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mb-16 gap-3 md:gap-4">
-    @for (product of products; track product.id ; let first=$first ; let last=$last) {
+    @for (product of products(); track product.id ; let first=$first ; let last=$last) {
     <app-item-card [product]="product" [first]="first" [last]="last"></app-item-card>
     }
     @empty {
     <p>No products found.</p>
     }
   </section>
-
   }
 
   <!-- Product Modal -->
   <app-product-modal></app-product-modal>
-
-
-
-
-
 </div>

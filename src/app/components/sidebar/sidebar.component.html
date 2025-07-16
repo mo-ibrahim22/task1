@@ -1,12 +1,10 @@
 <!-- Sidebar -->
 <div class="fixed left-0 top-0 h-full bg-primary-50 z-30 transition-all duration-300 ease-in-out border-r border-primary-200 overflow-y-auto"
-    [class.w-64]="sidebarOpen$ | async" [class.w-0]="!(sidebarOpen$ | async)"
-    [class.-translate-x-full]="(isMobile$ | async) && !(sidebarOpen$ | async)"
-    [class.translate-x-0]="(sidebarOpen$ | async) || !(isMobile$ | async)" appClickOutside
-    [enableClickOutside]="((isMobile$ | async) ?? false) && ((sidebarOpen$ | async) ?? false)"
-    (clickOutside)="closeSidebar()">
+    [class.w-64]="sidebarOpen()" [class.w-0]="!sidebarOpen()" [class.-translate-x-full]="isMobile() && !sidebarOpen()"
+    [class.translate-x-0]="sidebarOpen() || !isMobile()" appClickOutside
+    [enableClickOutside]="isMobile() && sidebarOpen()" (clickOutside)="closeSidebar()">
 
-    @if (sidebarOpen$ | async) {
+    @if (sidebarOpen()) {
     <div class="p-6">
         <h1 class="text-lg font-medium text-primary-900">Fashion Hub</h1>
     </div>

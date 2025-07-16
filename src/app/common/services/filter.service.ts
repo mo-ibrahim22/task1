@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FilterService {
-  private searchTermSubject = new BehaviorSubject<string>('');
-  public searchTerm$ = this.searchTermSubject.asObservable();
+  private searchTermSignal = signal<string>('');
+
+  searchTerm = this.searchTermSignal.asReadonly();
 
   setSearchTerm(term: string): void {
-    this.searchTermSubject.next(term);
-  }
-
-  get searchTerm(): string {
-    return this.searchTermSubject.value;
+    this.searchTermSignal.set(term);
   }
 }

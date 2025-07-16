@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../common/services/auth.service';
@@ -16,15 +16,15 @@ export class ProfileDropdownComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  user$ = this.authService.user$;
-  isOpen = false;
+  user = this.authService.user;
+  isOpen = signal(false);
 
   toggleDropdown(): void {
-    this.isOpen = !this.isOpen;
+    this.isOpen.set(!this.isOpen());
   }
 
   closeDropdown(): void {
-    this.isOpen = false;
+    this.isOpen.set(false);
   }
 
   navigateToProfile(): void {

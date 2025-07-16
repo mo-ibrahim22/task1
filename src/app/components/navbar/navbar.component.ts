@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LayoutService } from '../../common/services/layout.service';
 import { FilterService } from '../../common/services/filter.service';
 import { CommonModule } from '@angular/common';
@@ -23,16 +23,17 @@ import { ProfileDropdownComponent } from '../profile-dropdown/profile-dropdown.c
 export class NavbarComponent {
   layoutService = inject(LayoutService);
   filterService = inject(FilterService);
-  isMobile$ = this.layoutService.isMobile$;
-  sidebarOpen$ = this.layoutService.sidebarOpen$;
-  showMobileSearch = false;
+
+  isMobile = this.layoutService.isMobile;
+  sidebarOpen = this.layoutService.sidebarOpen;
+  showMobileSearch = signal(false);
 
   toggleMobileSearch() {
-    this.showMobileSearch = !this.showMobileSearch;
+    this.showMobileSearch.set(!this.showMobileSearch());
   }
 
   closeMobileSearch() {
-    this.showMobileSearch = false;
+    this.showMobileSearch.set(false);
   }
 
   onSearch(event: Event) {

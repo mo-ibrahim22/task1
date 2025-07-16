@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, effect } from '@angular/core';
 import { LayoutService } from './common/services/layout.service';
 import { AuthService } from './common/services/auth.service';
 import { CartService } from './common/services/cart.service';
@@ -19,8 +19,18 @@ export class AppComponent implements OnInit {
   private authService = inject(AuthService);
   private cartService = inject(CartService);
 
-  sidebarOpen$ = this.layoutService.sidebarOpen$;
-  isMobile$ = this.layoutService.isMobile$;
+  sidebarOpen = this.layoutService.sidebarOpen;
+  isMobile = this.layoutService.isMobile;
+
+  constructor() {
+    // Initialize cart when user changes
+    effect(() => {
+      const user = this.authService.user();
+      if (user) {
+        this.cartService.initializeCart();
+      }
+    });
+  }
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
@@ -30,12 +40,5 @@ export class AppComponent implements OnInit {
         this.layoutService.checkScreenSize(window.innerWidth);
       });
     }
-
-    // Initialize cart for authenticated users
-    this.authService.user$.subscribe((user) => {
-      if (user) {
-        this.cartService.initializeCart();
-      }
-    });
   }
 }

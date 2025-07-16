@@ -1,5 +1,5 @@
 <div class="relative">
-    @if (user$ | async; as user) {
+    @if (user(); as userData) {
     <!-- Profile Image Button -->
     <button (click)="toggleDropdown()"
         class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-primary-300 transition-all duration-200">
@@ -8,7 +8,7 @@
     </button>
 
     <!-- Dropdown Menu -->
-    @if (isOpen) {
+    @if (isOpen()) {
     <div class="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border border-primary-200 z-50"
         appClickOutside (clickOutside)="closeDropdown()">
 
@@ -21,11 +21,11 @@
                         alt="Profile" class="w-full h-full object-cover" />
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-semibold text-primary-900 truncate">{{ user.name }}</h4>
-                    <p class="text-sm text-primary-600 truncate">{{ user.email }}</p>
+                    <h4 class="font-semibold text-primary-900 truncate">{{ userData.name }}</h4>
+                    <p class="text-sm text-primary-600 truncate">{{ userData.email }}</p>
                     <span
                         class="inline-block bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-xs font-medium mt-1">
-                        {{ user.role }}
+                        {{ userData.role }}
                     </span>
                 </div>
             </div>

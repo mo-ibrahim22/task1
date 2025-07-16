@@ -1,10 +1,10 @@
 import {
   Component,
-  Input,
-  Output,
-  EventEmitter,
+  input,
+  output,
   TemplateRef,
   ContentChild,
+  computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -20,41 +20,36 @@ export type TextAlign = 'left' | 'center' | 'right';
   styleUrl: './button.component.css',
 })
 export class ButtonComponent {
-  @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled: boolean = false;
-  @Input() loading: boolean = false;
-  @Input() customClass: string = '';
-  @Input() size: ButtonSize = 'md';
-  @Input() shape: 'default' | 'circle' = 'default'; // NEW SHAPE SUPPORT
+  type = input<'button' | 'submit' | 'reset'>('button');
+  disabled = input<boolean>(false);
+  loading = input<boolean>(false);
+  customClass = input<string>('');
+  size = input<ButtonSize>('md');
+  shape = input<'default' | 'circle'>('default');
 
-  @Input() text: string = '';
-  @Input() textAlign: TextAlign = 'center';
+  text = input<string>('');
+  textAlign = input<TextAlign>('center');
 
-  @Input() iconSrc: string = '';
-  @Input() iconPosition: IconPosition = 'left';
-  @Input() iconClass: string = 'w-5 h-5';
+  iconSrc = input<string>('');
+  iconPosition = input<IconPosition>('left');
+  iconClass = input<string>('w-5 h-5');
 
-  @Input() secondaryIconSrc: string = '';
-  @Input() secondaryIconClass: string = 'w-5 h-5';
+  secondaryIconSrc = input<string>('');
+  secondaryIconClass = input<string>('w-5 h-5');
 
-  @Input() loadingIconSrc: string = '';
-  @Input() loadingIconClass: string = 'w-5 h-5 animate-spin';
+  loadingIconSrc = input<string>('');
+  loadingIconClass = input<string>('w-5 h-5 animate-spin');
 
-  @Input() badge: string | number = '';
-  @Input() badgeClass: string =
-    'absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center';
+  badge = input<string | number>('');
+  badgeClass = input<string>(
+    'absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center'
+  );
 
-  @Output() clicked = new EventEmitter<Event>();
+  clicked = output<Event>();
 
   @ContentChild('customContent') customContent?: TemplateRef<any>;
 
-  onClick(event: Event): void {
-    if (!this.disabled && !this.loading) {
-      this.clicked.emit(event);
-    }
-  }
-
-  get baseClasses(): string {
+  baseClasses = computed(() => {
     const sizeClasses = {
       xs: 'px-2 py-1 text-xs',
       sm: 'px-2 py-1 text-xs md:px-3 md:py-1.5 md:text-sm',
@@ -73,43 +68,30 @@ export class ButtonComponent {
       'inline-flex items-center font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed relative';
 
     const shapeClass =
-      this.shape === 'circle'
+      this.shape() === 'circle'
         ? 'rounded-full w-8 h-8 justify-center items-center p-0'
-        : 'rounded-lg ' + sizeClasses[this.size];
+        : 'rounded-lg ' + sizeClasses[this.size()];
 
-    return `${baseClass} ${shapeClass} ${textAlignClasses[this.textAlign]} ${
-      this.customClass
-    }`;
-  }
+    return `${baseClass} ${shapeClass} ${
+      textAlignClasses[this.textAlign()]
+    } ${this.customClass()}`;
+  });
 
-  get shouldShowText(): boolean {
-    return !!this.text && !this.loading;
-  }
+  shouldShowText = computed(() => !!this.text() && !this.loading());
+  shouldShowIcon = computed(() => !!this.iconSrc() && !this.loading());
+  shouldShowSecondaryIcon = computed(
+    () =>
+      !!this.secondaryIconSrc() &&
+      this.iconPosition() === 'between' &&
+      !this.loading()
+  );
+  shouldShowBadge = computed(() => !!this.badge());
+  shouldShowLoading = computed(() => this.loading());
 
-  get shouldShowIcon(): boolean {
-    return !!this.iconSrc && !this.loading;
-  }
+  iconGap = computed(() => {
+    if (!this.shouldShowText()) return '';
 
-  get shouldShowSecondaryIcon(): boolean {
-    return (
-      !!this.secondaryIconSrc &&
-      this.iconPosition === 'between' &&
-      !this.loading
-    );
-  }
-
-  get shouldShowBadge(): boolean {
-    return !!this.badge;
-  }
-
-  get shouldShowLoading(): boolean {
-    return this.loading;
-  }
-
-  get iconGap(): string {
-    if (!this.shouldShowText) return '';
-
-    switch (this.iconPosition) {
+    switch (this.iconPosition()) {
       case 'left':
         return 'gap-1 md:gap-2';
       case 'right':
@@ -120,6 +102,12 @@ export class ButtonComponent {
         return '';
       default:
         return 'gap-1 md:gap-2';
+    }
+  });
+
+  onClick(event: Event): void {
+    if (!this.disabled() && !this.loading()) {
+      this.clicked.emit(event);
     }
   }
 }

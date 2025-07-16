@@ -1,13 +1,6 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {
-  BehaviorSubject,
-  Observable,
-  tap,
-  catchError,
-  throwError,
-  EMPTY,
-} from 'rxjs';
+import { Observable, tap, catchError, throwError, EMPTY } from 'rxjs';
 import {
   CartResponse,
   AddToCartRequest,
@@ -24,11 +17,13 @@ export class CartService {
   private router = inject(Router);
   private apiUrl = environment.apiUrl;
 
-  private cartSubject = new BehaviorSubject<CartResponse | null>(null);
-  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  private cartSignal = signal<CartResponse | null>(null);
+  private isLoadingSignal = signal<boolean>(false);
 
-  cart$ = this.cartSubject.asObservable();
-  isLoading$ = this.isLoadingSubject.asObservable();
+  cart = this.cartSignal.asReadonly();
+  isLoading = this.isLoadingSignal.asReadonly();
+  cartCount = computed(() => this.cartSignal()?.numOfCartItems ?? 0);
+  totalPrice = computed(() => this.cartSignal()?.data.totalCartPrice ?? 0);
 
   private requireAuth(): boolean {
     if (!this.authService.isAuthenticated()) {
@@ -51,18 +46,18 @@ export class CartService {
       return EMPTY;
     }
 
-    this.isLoadingSubject.next(true);
+    this.isLoadingSignal.set(true);
     return this.http
       .get<CartResponse>(`${this.apiUrl}/api/v1/cart`, {
         headers: this.getHeaders(),
       })
       .pipe(
         tap((cart) => {
-          this.cartSubject.next(cart);
-          this.isLoadingSubject.next(false);
+          this.cartSignal.set(cart);
+          this.isLoadingSignal.set(false);
         }),
         catchError((error) => {
-          this.isLoadingSubject.next(false);
+          this.isLoadingSignal.set(false);
           console.error('Error fetching cart:', error);
           return throwError(() => error);
         })
@@ -74,7 +69,7 @@ export class CartService {
       return EMPTY;
     }
 
-    this.isLoadingSubject.next(true);
+    this.isLoadingSignal.set(true);
     const body: AddToCartRequest = { productId };
     return this.http
       .post<CartResponse>(`${this.apiUrl}/api/v1/cart`, body, {
@@ -82,11 +77,11 @@ export class CartService {
       })
       .pipe(
         tap((cart) => {
-          this.cartSubject.next(cart);
-          this.isLoadingSubject.next(false);
+          this.cartSignal.set(cart);
+          this.isLoadingSignal.set(false);
         }),
         catchError((error) => {
-          this.isLoadingSubject.next(false);
+          this.isLoadingSignal.set(false);
           console.error('Error adding to cart:', error);
           return throwError(() => error);
         })
@@ -98,7 +93,7 @@ export class CartService {
       return EMPTY;
     }
 
-    this.isLoadingSubject.next(true);
+    this.isLoadingSignal.set(true);
     const body: UpdateCartRequest = { count: count.toString() };
     return this.http
       .put<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`, body, {
@@ -106,11 +101,11 @@ export class CartService {
       })
       .pipe(
         tap((cart) => {
-          this.cartSubject.next(cart);
-          this.isLoadingSubject.next(false);
+          this.cartSignal.set(cart);
+          this.isLoadingSignal.set(false);
         }),
         catchError((error) => {
-          this.isLoadingSubject.next(false);
+          this.isLoadingSignal.set(false);
           console.error('Error updating cart item:', error);
           return throwError(() => error);
         })
@@ -122,18 +117,18 @@ export class CartService {
       return EMPTY;
     }
 
-    this.isLoadingSubject.next(true);
+    this.isLoadingSignal.set(true);
     return this.http
       .delete<CartResponse>(`${this.apiUrl}/api/v1/cart/${productId}`, {
         headers: this.getHeaders(),
       })
       .pipe(
         tap((cart) => {
-          this.cartSubject.next(cart);
-          this.isLoadingSubject.next(false);
+          this.cartSignal.set(cart);
+          this.isLoadingSignal.set(false);
         }),
         catchError((error) => {
-          this.isLoadingSubject.next(false);
+          this.isLoadingSignal.set(false);
           console.error('Error removing cart item:', error);
           return throwError(() => error);
         })
@@ -145,18 +140,18 @@ export class CartService {
       return EMPTY;
     }
 
-    this.isLoadingSubject.next(true);
+    this.isLoadingSignal.set(true);
     return this.http
       .delete(`${this.apiUrl}/api/v1/cart`, {
         headers: this.getHeaders(),
       })
       .pipe(
         tap(() => {
-          this.cartSubject.next(null);
-          this.isLoadingSubject.next(false);
+          this.cartSignal.set(null);
+          this.isLoadingSignal.set(false);
         }),
         catchError((error) => {
-          this.isLoadingSubject.next(false);
+          this.isLoadingSignal.set(false);
           console.error('Error clearing cart:', error);
           return throwError(() => error);
         })
@@ -167,7 +162,7 @@ export class CartService {
     if (!this.authService.isAuthenticated()) {
       return false;
     }
-    const cart = this.cartSubject.value;
+    const cart = this.cartSignal();
     return (
       cart?.data.products.some(
         (item) =>
@@ -176,20 +171,11 @@ export class CartService {
     );
   }
 
-  getTotalPrice(): number {
-    return this.cartSubject.value?.data.totalCartPrice ?? 0;
-  }
-
-  getCartCount(): number {
-    return this.cartSubject.value?.numOfCartItems ?? 0;
-  }
-
   // Initialize cart for authenticated users
   initializeCart(): void {
     if (this.authService.isAuthenticated()) {
       this.getCart().subscribe({
         error: (error) => {
-          // Handle cart initialization error silently
           console.warn('Could not initialize cart:', error);
         },
       });
