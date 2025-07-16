@@ -1,5 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LayoutService } from './common/services/layout.service';
+import { AuthService } from './common/services/auth.service';
+import { CartService } from './common/services/cart.service';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -14,6 +16,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   private layoutService = inject(LayoutService);
+  private authService = inject(AuthService);
+  private cartService = inject(CartService);
 
   sidebarOpen$ = this.layoutService.sidebarOpen$;
   isMobile$ = this.layoutService.isMobile$;
@@ -26,5 +30,12 @@ export class AppComponent implements OnInit {
         this.layoutService.checkScreenSize(window.innerWidth);
       });
     }
+
+    // Initialize cart for authenticated users
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.cartService.initializeCart();
+      }
+    });
   }
 }

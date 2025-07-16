@@ -1,0 +1,65 @@
+<div class="relative">
+    @if (user$ | async; as user) {
+    <!-- Profile Image Button -->
+    <button (click)="toggleDropdown()"
+        class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-primary-300 transition-all duration-200">
+        <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=32"
+            alt="Profile" class="w-full h-full object-cover" />
+    </button>
+
+    <!-- Dropdown Menu -->
+    @if (isOpen) {
+    <div class="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border border-primary-200 z-50"
+        appClickOutside (clickOutside)="closeDropdown()">
+
+        <!-- User Info Section -->
+        <div class="p-4 border-b border-primary-200">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center overflow-hidden">
+                    <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=48"
+                        alt="Profile" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold text-primary-900 truncate">{{ user.name }}</h4>
+                    <p class="text-sm text-primary-600 truncate">{{ user.email }}</p>
+                    <span
+                        class="inline-block bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full text-xs font-medium mt-1">
+                        {{ user.role }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Items -->
+        <div class="py-2">
+            <app-button text="View Profile" iconSrc="assets/icons/user.svg" iconPosition="left" textAlign="left"
+                customClass="w-full px-4 py-3 text-primary-700 hover:bg-primary-50 transition-colors text-left"
+                (clicked)="navigateToProfile()">
+            </app-button>
+
+            <app-button text="Settings" iconSrc="assets/icons/settings.svg" iconPosition="left" textAlign="left"
+                customClass="w-full px-4 py-3 text-primary-700 hover:bg-primary-50 transition-colors text-left">
+            </app-button>
+
+            <app-button text="Help & Support" iconSrc="assets/icons/help.svg" iconPosition="left" textAlign="left"
+                customClass="w-full px-4 py-3 text-primary-700 hover:bg-primary-50 transition-colors text-left">
+            </app-button>
+
+            <div class="border-t border-primary-200 mt-2 pt-2">
+                <app-button text="Sign Out" iconSrc="assets/icons/logout.svg" iconPosition="left" textAlign="left"
+                    customClass="w-full px-4 py-3 text-red-600 hover:bg-red-50 transition-colors text-left"
+                    (clicked)="logout()">
+                </app-button>
+            </div>
+        </div>
+    </div>
+    }
+    } @else {
+    <!-- Login Button -->
+    <app-button text="Sign In" size="sm"
+        customClass="bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors"
+        (clicked)="navigateToLogin()">
+    </app-button>
+    }
+</div>

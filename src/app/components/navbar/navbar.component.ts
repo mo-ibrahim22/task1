@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CartDropdownComponent } from '../cart-dropdown/cart-dropdown.component';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 import { ButtonComponent } from '../button/button.component';
+import { ProfileDropdownComponent } from '../profile-dropdown/profile-dropdown.component';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,7 @@ import { ButtonComponent } from '../button/button.component';
     CartDropdownComponent,
     ClickOutsideDirective,
     ButtonComponent,
+    ProfileDropdownComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],

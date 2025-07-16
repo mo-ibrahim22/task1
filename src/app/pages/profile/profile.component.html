@@ -1,0 +1,123 @@
+<div class="min-h-screen bg-primary-50 pt-20">
+    @if (user$ | async; as user) {
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <app-button text="← Back to Shop" customClass="mb-6 text-primary-600 hover:text-primary-800 font-medium"
+            (clicked)="goBack()">
+        </app-button>
+
+        <!-- Profile Header -->
+        <div class="bg-white rounded-2xl shadow-lg border border-primary-200 overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-primary-600 to-primary-700 px-8 py-12">
+                <div class="flex items-center gap-6">
+                    <div
+                        class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center overflow-hidden ring-4 ring-white/30">
+                        <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=96"
+                            alt="Profile" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="text-white">
+                        <h1 class="text-3xl font-bold mb-2">{{ user.name }}</h1>
+                        <p class="text-primary-100 text-lg mb-2">{{ user.email }}</p>
+                        <span class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+                            {{ user.role }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Personal Information -->
+            <div class="bg-white rounded-xl shadow-lg border border-primary-200 p-6">
+                <h2 class="text-xl font-bold text-primary-900 mb-6 flex items-center">
+                    <img src="assets/icons/user.svg" alt="User" class="w-6 h-6 mr-3" />
+                    Personal Information
+                </h2>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-primary-100">
+                        <span class="text-primary-600 font-medium">Full Name</span>
+                        <span class="text-primary-900 font-semibold">{{ user.name }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-primary-100">
+                        <span class="text-primary-600 font-medium">Email Address</span>
+                        <span class="text-primary-900 font-semibold">{{ user.email }}</span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3 border-b border-primary-100">
+                        <span class="text-primary-600 font-medium">Role</span>
+                        <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ user.role }}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-primary-600 font-medium">Member Since</span>
+                        <!-- <span class="text-primary-900 font-semibold">{{ new Date().toLocaleDateString() }}</span> -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Actions -->
+            <div class="bg-white rounded-xl shadow-lg border border-primary-200 p-6">
+                <h2 class="text-xl font-bold text-primary-900 mb-6 flex items-center">
+                    <img src="assets/icons/settings.svg" alt="Settings" class="w-6 h-6 mr-3" />
+                    Account Actions
+                </h2>
+
+                <div class="space-y-4">
+                    <app-button text="Edit Profile" iconSrc="assets/icons/edit.svg" iconPosition="left" size="lg"
+                        customClass="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium transition-colors">
+                    </app-button>
+
+                    <app-button text="Change Password" iconSrc="assets/icons/lock.svg" iconPosition="left" size="lg"
+                        customClass="w-full border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300 transition-all duration-200">
+                    </app-button>
+
+                    <app-button text="Privacy Settings" iconSrc="assets/icons/shield.svg" iconPosition="left" size="lg"
+                        customClass="w-full border-2 border-primary-200 text-primary-700 hover:bg-primary-50 hover:border-primary-300 transition-all duration-200">
+                    </app-button>
+
+                    <div class="pt-4 border-t border-primary-200">
+                        <app-button text="Sign Out" iconSrc="assets/icons/logout.svg" iconPosition="left" size="lg"
+                            customClass="w-full bg-red-500 hover:bg-red-600 text-white font-medium transition-colors"
+                            (clicked)="logout()">
+                        </app-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="bg-white rounded-xl shadow-lg border border-primary-200 p-6 mt-8">
+            <h2 class="text-xl font-bold text-primary-900 mb-6 flex items-center">
+                <img src="assets/icons/info.svg" alt="Info" class="w-6 h-6 mr-3" />
+                Account Statistics
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-4 bg-primary-50 rounded-lg">
+                    <div class="text-2xl font-bold text-primary-900 mb-1">0</div>
+                    <div class="text-primary-600 text-sm">Orders Placed</div>
+                </div>
+
+                <div class="text-center p-4 bg-secondary-50 rounded-lg">
+                    <div class="text-2xl font-bold text-secondary-900 mb-1">0</div>
+                    <div class="text-secondary-600 text-sm">Wishlist Items</div>
+                </div>
+
+                <div class="text-center p-4 bg-tertiary-50 rounded-lg">
+                    <div class="text-2xl font-bold text-tertiary-900 mb-1">$0.00</div>
+                    <div class="text-tertiary-600 text-sm">Total Spent</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    } @else {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-primary-600">Loading profile...</div>
+    </div>
+    }
+</div>
