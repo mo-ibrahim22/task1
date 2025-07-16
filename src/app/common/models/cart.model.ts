@@ -1,17 +1,33 @@
-import { Product } from "./product.model";
+import { Product } from './product.model';
 
-export interface CartItem {
-  productId: number;
-  quantity: number;
+export interface CartProduct {
+  count: number;
+  _id: string;
+  product: Product;
+  price: number;
 }
 
-export interface Cart {
-  id: number;
-  userId: number;
-  date: string;
-  products: CartItem[];
+export interface CartData {
+  _id: string;
+  cartOwner: string;
+  products: CartProduct[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  totalCartPrice: number;
 }
 
-export interface CartProduct extends Product {
-  quantity: number;
+export interface CartResponse {
+  status: string;
+  numOfCartItems: number;
+  cartId: string;
+  data: CartData;
+}
+
+export interface AddToCartRequest {
+  productId: string;
+}
+
+export interface UpdateCartRequest {
+  count: string;
 }

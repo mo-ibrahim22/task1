@@ -1,0 +1,118 @@
+<div class="min-h-screen bg-primary-50 pt-20">
+    @if (isLoading) {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-primary-600">Loading product...</div>
+    </div>
+    } @else if (product) {
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Back Button -->
+        <app-button text="← Back to Shop" customClass="mb-6 text-primary-600 hover:text-primary-800 font-medium"
+            (clicked)="goBack()">
+        </app-button>
+
+        <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Images Section -->
+            <div class="space-y-4">
+                <!-- Main Image -->
+                <div class="aspect-square bg-white rounded-xl overflow-hidden shadow-lg">
+                    <img [src]="product.images[selectedImageIndex] || product.imageCover" [alt]="product.title"
+                        class="w-full h-full object-cover" />
+                </div>
+
+                <!-- Thumbnail Images -->
+                @if (product.images.length > 1) {
+                <div class="flex gap-3 overflow-x-auto pb-2">
+                    @for (image of product.images; track $index) {
+                    <button
+                        class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200"
+                        [class.border-primary-600]="selectedImageIndex === $index"
+                        [class.border-primary-200]="selectedImageIndex !== $index" (click)="selectImage($index)">
+                        <img [src]="image" [alt]="product.title" class="w-full h-full object-cover" />
+                    </button>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Product Info -->
+            <div class="space-y-6">
+                <!-- Category & Brand -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {{ product.category.name }}
+                    </span>
+                    <span class="bg-secondary-100 text-secondary-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {{ product.brand.name }}
+                    </span>
+                </div>
+
+                <!-- Title -->
+                <h1 class="text-3xl lg:text-4xl font-bold text-primary-900">
+                    {{ product.title }}
+                </h1>
+
+                <!-- Rating & Sales -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-1">
+                        <img src="assets/icons/star.svg" alt="Star" class="w-5 h-5 text-yellow-400" />
+                        <span class="font-medium text-primary-900">{{ product.ratingsAverage }}</span>
+                        <span class="text-primary-600">({{ product.ratingsQuantity }} reviews)</span>
+                    </div>
+                    <div class="text-primary-600">
+                        {{ product.sold }} sold
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="text-4xl font-bold text-primary-900">
+                    ${{ product.price }}
+                </div>
+
+                <!-- Description -->
+                <div class="prose prose-primary max-w-none">
+                    <h3 class="text-lg font-semibold text-primary-900 mb-2">Description</h3>
+                    <p class="text-primary-700 leading-relaxed whitespace-pre-line">
+                        {{ product.description }}
+                    </p>
+                </div>
+
+                <!-- Stock Info -->
+                <div class="bg-primary-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-primary-700 font-medium">Stock Available:</span>
+                        <span class="text-primary-900 font-bold">{{ product.quantity }} units</span>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <div class="pt-4">
+                    <app-button [text]="cartButtonText"
+                        [iconSrc]="isInCart() ? 'assets/icons/trash.svg' : 'assets/icons/shopping-cart.svg'"
+                        iconPosition="left" size="lg"
+                        [customClass]="'w-full font-semibold py-4 rounded-xl transition-all duration-200 ' + cartButtonClass"
+                        (clicked)="toggleCart()">
+                    </app-button>
+                </div>
+
+                <!-- Subcategories -->
+                @if (product.subcategory.length > 0) {
+                <div>
+                    <h3 class="text-lg font-semibold text-primary-900 mb-3">Categories</h3>
+                    <div class="flex flex-wrap gap-2">
+                        @for (sub of product.subcategory; track sub._id) {
+                        <span class="bg-tertiary-100 text-tertiary-700 px-3 py-1 rounded-full text-sm">
+                            {{ sub.name }}
+                        </span>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    } @else {
+    <div class="flex justify-center items-center h-64">
+        <div class="text-lg text-red-600">Product not found</div>
+    </div>
+    }
+</div>

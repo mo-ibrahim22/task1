@@ -9,7 +9,7 @@
   }
 
   <div class="aspect-[166/221] w-full">
-    <img [src]="product.image" [alt]="product.title"
+    <img [src]="product.imageCover" [alt]="product.title"
       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-xl" />
   </div>
 
@@ -23,7 +23,7 @@
     </h3>
 
     <p class="text-primary-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-1">
-      {{ product.category}}
+      {{ product.category.name}}
     </p>
 
     <p class="text-base md:text-lg font-bold"

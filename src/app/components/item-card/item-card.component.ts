@@ -1,26 +1,29 @@
 import { Component, Input, inject } from '@angular/core';
 import { Product } from '../../common/models/product.model';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ModalService } from '../../common/services/modal.service';
 import { ButtonComponent } from '../button/button.component';
 import { CartService } from '../../common/services/cart.service';
 
 @Component({
   selector: 'app-item-card',
+  standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './item-card.component.html',
   styleUrl: './item-card.component.css',
 })
 export class ItemCardComponent {
-  private modalService = inject(ModalService);
-  private cartService = inject(CartService);
+  private readonly modalService = inject(ModalService);
+  private readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
 
   @Input() product!: Product;
   @Input() first!: boolean;
   @Input() last!: boolean;
 
   openModal(): void {
-    this.modalService.openModal(this.product);
+    this.router.navigate(['/product', this.product.id]);
   }
 
   get isInCart(): boolean {
@@ -29,9 +32,13 @@ export class ItemCardComponent {
 
   toggleCart(): void {
     if (this.isInCart) {
-      this.cartService.removeFromCart(this.product.id).subscribe();
+      this.cartService.removeItem(this.product.id).subscribe(() => {
+        this.cartService.getCart().subscribe(); // refresh cache
+      });
     } else {
-      this.cartService.addToCart(this.product).subscribe();
+      this.cartService.addToCart(this.product.id).subscribe(() => {
+        this.cartService.getCart().subscribe(); // refresh cache
+      });
     }
   }
 

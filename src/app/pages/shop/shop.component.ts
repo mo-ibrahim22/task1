@@ -3,7 +3,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ItemCardComponent } from '../../components/item-card/item-card.component';
-import { Product } from '../../common/models/product.model';
+import { Product, ProductsResponse } from '../../common/models/product.model';
 import { ProductsService } from '../../common/services/products.service';
 import { FilterService } from '../../common/services/filter.service';
 import { ProductModalComponent } from '../../components/product-modal/product-modal.component';
@@ -45,8 +45,8 @@ export class ShopComponent implements OnInit {
   private getProducts() {
     this.isloading = true;
     this.productsService.getProducts().subscribe({
-      next: (response) => {
-        this.allProducts = response;
+      next: (response: ProductsResponse) => {
+        this.allProducts = response.data;
         this.products = [...this.allProducts];
         this.isloading = false;
       },

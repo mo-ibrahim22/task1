@@ -33,106 +33,47 @@
                         placeholder="Enter your email address">
                     </app-input-field>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <app-input-field [formGroup]="signupForm" controlName="password" label="Password"
-                            type="password" placeholder="Create a password">
-                        </app-input-field>
-                        <div>
-                            <app-input-field [formGroup]="signupForm" controlName="confirmPassword"
-                                label="Confirm Password" type="password" placeholder="Confirm your password">
-                            </app-input-field>
-                            <!-- Password Match Error -->
-                            @if (signupForm.hasError('passwordMismatch') && (signupForm.get('confirmPassword')?.touched
-                            ||
-                            signupForm.get('password')?.touched)) {
-                            <div class="mt-2 flex items-center">
-                                <svg class="h-4 w-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                                <span class="text-red-600 text-sm font-medium">
-                                    Passwords do not match
-                                </span>
-                            </div>
-                            }
+                    <app-input-field [formGroup]="signupForm" controlName="password" label="Password" type="password"
+                        placeholder="Create a password">
+                    </app-input-field>
 
-                        </div>
-                    </div>
+                    <app-input-field [formGroup]="signupForm" controlName="rePassword" label="Confirm Password"
+                        type="password" placeholder="Confirm your password">
+                    </app-input-field>
 
-
-                </div>
-
-                <!-- Phone Numbers -->
-                <div class="mb-6" formArrayName="phones">
-                    <h3 class="text-lg font-semibold text-primary-900 mb-4 flex items-center">
-                        <app-button [text]="'2'" iconPosition="center" [shape]="'circle'"
-                            customClass="w-6 h-6 text-white text-sm font-bold bg-secondary-500 mr-3">
-                        </app-button>
-                        Phone Numbers
-                    </h3>
-
-                    @for (phone of phones.controls; track $index) {
-                    <div class="mb-4 p-4 bg-primary-50 rounded-xl border border-primary-200">
-                        <div class="flex items-end gap-3">
-                            <div class="flex-1">
-                                <app-input-field [formGroup]="getPhoneGroup($index)" controlName="phone"
-                                    [label]="'Phone Number ' + ($index + 1)" type="tel"
-                                    placeholder="Enter phone number">
-                                </app-input-field>
-                            </div>
-
-                            @if (phones.controls.length > 1) {
-                            <app-button iconSrc="assets/icons/trash.svg" iconPosition="center" [shape]="'circle'"
-                                customClass="mb-6 w-10 h-10 bg-red-100 text-red-600 hover:bg-red-200 transition-all duration-200"
-                                (clicked)="removePhone($index)">
-                            </app-button>
-
-                            }
-                        </div>
+                    <!-- Password Match Error -->
+                    @if (signupForm.hasError('passwordMismatch') && (signupForm.get('rePassword')?.touched ||
+                    signupForm.get('password')?.touched)) {
+                    <div class="mb-4 flex items-center">
+                        <svg class="h-4 w-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-600 text-sm font-medium">
+                            Passwords do not match
+                        </span>
                     </div>
                     }
 
-                    <app-button text="Add Another Phone" iconSrc="assets/icons/plus.svg" iconPosition="left"
-                        customClass="w-full border-2 border-dashed border-secondary-300 text-secondary-600 hover:bg-secondary-50 hover:border-secondary-400 transition-all duration-200 py-3"
-                        (clicked)="addPhone()">
-                    </app-button>
+                    <app-input-field [formGroup]="signupForm" controlName="phone" label="Phone Number" type="tel"
+                        placeholder="Enter your phone number (11 digits)">
+                    </app-input-field>
                 </div>
 
-                <!-- Addresses -->
-                <div class="mb-8" formArrayName="addresses">
-                    <h3 class="text-lg font-semibold text-primary-900 mb-4 flex items-center">
-                        <app-button [text]="'3'" iconPosition="center" [shape]="'circle'"
-                            customClass="w-6 h-6 text-white text-sm font-bold bg-tertiary-500 mr-3">
-                        </app-button>
-                        Addresses
-                    </h3>
-
-                    @for (address of addresses.controls; track $index) {
-                    <div class="mb-4 p-4 bg-primary-50 rounded-xl border border-primary-200">
-                        <div class="flex items-end gap-3">
-                            <div class="flex-1">
-                                <app-input-field [formGroup]="getAddressGroup($index)" controlName="address"
-                                    [label]="'Address ' + ($index + 1)" type="text" placeholder="Enter address">
-                                </app-input-field>
-                            </div>
-
-                            @if (addresses.controls.length > 1) {
-                            <app-button iconSrc="assets/icons/trash.svg" iconPosition="center" [shape]="'circle'"
-                                customClass="mb-6 w-10 h-10 bg-red-100 text-red-600 hover:bg-red-200 transition-all duration-200"
-                                (clicked)="removeAddress($index)">
-                            </app-button>
-
-                            }
-                        </div>
+                <!-- Error Message -->
+                @if (errorMessage) {
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-700 font-medium">{{ errorMessage }}</span>
                     </div>
-                    }
-
-                    <app-button text="Add Another Address" iconSrc="assets/icons/plus.svg" iconPosition="left"
-                        customClass="w-full border-2 border-dashed border-tertiary-300 text-tertiary-600 hover:bg-tertiary-50 hover:border-tertiary-400 transition-all duration-200 py-3"
-                        (clicked)="addAddress()">
-                    </app-button>
                 </div>
+                }
 
                 <!-- Submit Button -->
                 <app-button type="submit" text="Create Account" size="lg"
@@ -145,9 +86,10 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Already have an account?
-                    <a href="#" class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
+                    <button (click)="navigateToSignin()"
+                        class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
                         Sign in here
-                    </a>
+                    </button>
                 </p>
             </div>
         </div>

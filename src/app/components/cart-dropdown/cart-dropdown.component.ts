@@ -1,7 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../common/services/cart.service';
-import { CartProduct } from '../../common/models/cart.model';
 import { ClickOutsideDirective } from '../../common/directives/click-outside.directive';
 import { ButtonComponent } from '../button/button.component';
 
@@ -12,11 +11,16 @@ import { ButtonComponent } from '../button/button.component';
   templateUrl: './cart-dropdown.component.html',
   styleUrl: './cart-dropdown.component.css',
 })
-export class CartDropdownComponent {
+export class CartDropdownComponent implements OnInit {
   cartService = inject(CartService);
+  cart$ = this.cartService.cart$;
 
-  cartItems$ = this.cartService.cartItems$;
   isOpen = false;
+
+  ngOnInit(): void {
+    // Load cart when the component initializes
+    this.cartService.getCart().subscribe();
+  }
 
   toggleDropdown(): void {
     this.isOpen = !this.isOpen;
@@ -26,15 +30,21 @@ export class CartDropdownComponent {
     this.isOpen = false;
   }
 
-  removeFromCart(productId: number): void {
-    this.cartService.removeFromCart(productId).subscribe();
+  removeFromCart(productId: string): void {
+    this.cartService.removeItem(productId).subscribe();
   }
 
-  updateQuantity(productId: number, quantity: number): void {
-    this.cartService.updateQuantity(productId, quantity).subscribe();
+  updateQuantity(productId: string, quantity: number): void {
+    if (quantity <= 0) {
+      this.removeFromCart(productId);
+    } else {
+      this.cartService.updateItem(productId, quantity).subscribe();
+    }
   }
 
-  getTotalPrice(items: CartProduct[]): number {
-    return items.reduce((total, item) => total + item.price * item.quantity, 0);
+  getTotalPrice(): number {
+    return this.cartService.getTotalPrice();
   }
+
+  
 }

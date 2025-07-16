@@ -36,6 +36,20 @@
                     </a>
                 </div>
 
+                <!-- Error Message -->
+                @if (errorMessage) {
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-red-700 font-medium">{{ errorMessage }}</span>
+                    </div>
+                </div>
+                }
+
                 <!-- Submit Button -->
                 <app-button type="submit" text="Sign In" size="lg"
                     customClass="w-full bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 font-semibold"
@@ -69,9 +83,10 @@
             <div class="mt-8 text-center">
                 <p class="text-primary-600">
                     Don't have an account?
-                    <a href="#" class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
+                    <button (click)="navigateToSignup()"
+                        class="text-primary-700 hover:text-primary-800 font-semibold ml-1">
                         Sign up for free
-                    </a>
+                    </button>
                 </p>
             </div>
         </div>

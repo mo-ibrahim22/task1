@@ -1,16 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LayoutService } from './common/services/layout.service';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from "./components/sidebar/sidebar.component";
-import { NavbarComponent } from "./components/navbar/navbar.component";
-import { ShopComponent } from "./pages/shop/shop.component";
-import { SignupComponent } from "./pages/auth/signup/signup.component";
-import { SigninComponent } from "./pages/auth/signin/signin.component";
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, NavbarComponent, ShopComponent, SignupComponent, SigninComponent],
+  imports: [CommonModule, SidebarComponent, NavbarComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
