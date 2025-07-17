@@ -24,23 +24,22 @@ export class InputFieldComponent {
     const control = this.formGroup().get(this.controlName());
     if (!control || !control.errors) return '';
 
-    if (control.errors['required']) {
-      return `${this.label()} is required`;
+    const errors = control.errors;
+    const label = this.label();
+
+    switch (true) {
+      case !!errors['required']:
+        return `${label} is required`;
+      case !!errors['minlength']:
+        return `${label} must be at least ${errors['minlength'].requiredLength} characters`;
+      case !!errors['email']:
+        return 'Please enter a valid email address';
+      case !!errors['pattern']:
+        return `${label} contains invalid characters`;
+      case !!errors['match']:
+        return `${label} does not match`;
+      default:
+        return 'Invalid input';
     }
-    if (control.errors['minlength']) {
-      return `${this.label()} must be at least ${
-        control.errors['minlength'].requiredLength
-      } characters`;
-    }
-    if (control.errors['email']) {
-      return 'Please enter a valid email address';
-    }
-    if (control.errors['pattern']) {
-      return `${this.label()} contains invalid characters`;
-    }
-    if (control.errors['match']) {
-      return `${this.label()} does not match`;
-    }
-    return 'Invalid input';
   }
 }
