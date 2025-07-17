@@ -13,6 +13,7 @@ import { InputFieldComponent } from '../../../components/input-field/input-field
 import { ButtonComponent } from '../../../components/button/button.component';
 import { AuthService } from '../../../common/services/auth.service';
 import { SignupRequest } from '../../../common/models/user.model';
+import { ToasterService } from '../../../common/services/toaster.service';
 
 @Component({
   selector: 'app-signup',
@@ -34,7 +35,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toasterService: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -66,30 +68,50 @@ export class SignupComponent implements OnInit {
     this.errorMessage = '';
 
     if (this.signupForm.valid) {
-      this.isSubmitting = true;
-
-      const signupData: SignupRequest = this.signupForm.value;
-
-      this.authService.signup(signupData).subscribe({
-        next: (response) => {
-          console.log('Signup successful:', response);
-          this.router.navigate(['/shop']);
+      // Show confirmation dialog before submitting
+      this.toasterService.confirm(
+        'Create Account',
+        'Are you sure you want to create an account with the provided information?',
+        () => {
+          this.performSignup();
         },
-        error: (error) => {
-          console.error('Signup error:', error);
-          this.errorMessage =
-            error.error?.message || 'Signup failed. Please try again.';
-          this.isSubmitting = false;
-        },
-        complete: () => {
-          this.isSubmitting = false;
-        },
-      });
+        {
+          confirmText: 'Yes, Create Account',
+          cancelText: 'Cancel',
+          type: 'info',
+        }
+      );
     } else {
       this.signupForm.markAllAsTouched();
     }
   }
 
+  private performSignup(): void {
+    this.isSubmitting = true;
+
+    const signupData: SignupRequest = this.signupForm.value;
+
+    this.authService.signup(signupData).subscribe({
+      next: (response) => {
+        console.log('Signup successful:', response);
+        this.toasterService.success(
+          'Account Created',
+          'Your account has been created successfully!'
+        );
+        this.router.navigate(['/shop']);
+      },
+      error: (error) => {
+        console.error('Signup error:', error);
+        this.errorMessage =
+          error.error?.message || 'Signup failed. Please try again.';
+        this.toasterService.error('Signup Failed', this.errorMessage);
+        this.isSubmitting = false;
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      },
+    });
+  }
   navigateToSignin(): void {
     this.router.navigate(['/signin']);
   }
